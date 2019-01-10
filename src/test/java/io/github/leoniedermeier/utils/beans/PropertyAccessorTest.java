@@ -2,10 +2,14 @@ package io.github.leoniedermeier.utils.beans;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -42,9 +46,9 @@ class PropertyAccessorTest {
 		}
 
 		@Test
-		@DisplayName("Null property: throws exception")
+		@DisplayName("Null property: returns null")
 		void property_get_null_throws_exception() {
-			assertThrows(NoSuchElementException.class, () -> PropertyAccessor.of(null).get());
+			assertNull(PropertyAccessor.of(null).get());
 		}
 	}
 
@@ -58,8 +62,8 @@ class PropertyAccessorTest {
 			Person person = new Person();
 			String result = PropertyAccessor.of(person).then(Person::getAddress).then(Address::getStreet).orElse("X");
 			assertSame("X", result);
-		} 
-		
+		}
+
 		@Test
 		@DisplayName("Existing nested properties")
 		void existing_nested_properties() {
@@ -69,14 +73,14 @@ class PropertyAccessorTest {
 			String result = PropertyAccessor.of(person).then(Person::getAddress).then(Address::getStreet).get();
 			assertSame(person.address.street, result);
 		}
-		
+
 		@Test
 		@DisplayName("Existing nested properties with of")
 		void existing_nested_properties_with_of() {
 			Person person = new Person();
 			person.address = new Address();
 			person.address.street = "Street";
-			String result = PropertyAccessor.of(person, Person::getAddress, Address::getStreet ).get();
+			String result = PropertyAccessor.get(person, Person::getAddress, Address::getStreet);
 			assertSame(person.address.street, result);
 		}
 	}

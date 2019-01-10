@@ -15,7 +15,7 @@ class PropertyAccessorListTest {
 		parent.setChilds(Collections.singletonList(new Child("1")));
 		// Exception fangen oder nicht?
 		assertThrows(IndexOutOfBoundsException.class,
-				() -> PropertyAccessor.of(parent, Parent::getChilds, l -> l.get(1)).get());
+				() -> PropertyAccessor.get(parent, Parent::getChilds, l -> l.get(1)));
 
 	}
 

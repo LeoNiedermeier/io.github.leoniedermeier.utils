@@ -27,7 +27,7 @@ class ExceptionContextTest {
 		Object value = new Object();
 		exceptionContext.addContextValue("label", value);
 
-		assertSame(value, exceptionContext.findFirstContextValue("label"));
+		assertSame(value, exceptionContext.findFirstContextValue("label").get());
 	}
 
 	@Test
@@ -36,17 +36,17 @@ class ExceptionContextTest {
 		exceptionContext.addContextValue("label", value);
 		exceptionContext.addContextValue("label", "2");
 
-		assertSame(value, exceptionContext.findFirstContextValue("label"));
+		assertSame(value, exceptionContext.findFirstContextValue("label").get());
 	}
 
 	@Test
 	void getFirstContextValue_not_existing() {
-		assertNull(exceptionContext.findFirstContextValue("label"));
+		assertFalse(exceptionContext.findFirstContextValue("label").isPresent());
 	}
 
 	@Test
 	void getFirstContextValue_null() {
-		assertNull(exceptionContext.findFirstContextValue(null));
+		assertFalse(exceptionContext.findFirstContextValue(null).isPresent());
 	}
 
 	@Test
