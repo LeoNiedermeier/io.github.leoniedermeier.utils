@@ -1,21 +1,14 @@
 package io.github.leoniedermeier.utils.beans;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static io.github.leoniedermeier.utils.beans.PropertyAccessor.get;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import io.github.leoniedermeier.utils.beans.PropertyAccessorTest.Address;
 
 class PropertyAccessorTest {
 
@@ -67,6 +60,9 @@ class PropertyAccessorTest {
 			Person person = new Person();
 			String result = PropertyAccessor.get(person, Person::getAddress, Address::getStreet);
 			assertNull(result);
+
+			assertNull(npeSafe(() -> person.address.street));
+
 		}
 
 		@Test
@@ -75,10 +71,25 @@ class PropertyAccessorTest {
 			Person person = new Person();
 			person.address = new Address();
 			person.address.street = "Street";
-			String result = PropertyAccessor.get(person, Person::getAddress, Address::getStreet);
-			assertSame(person.address.street, result);
-		}
 
+			assertSame(person.address.street, get(person, p -> p.getAddress(), a -> a.getStreet()));
+
+			// oder:
+			assertSame(person.address.street, get(person, Person::getAddress, Address::getStreet));
+
+			assertSame(person.address.street, get(person.getAddress(), Address::getStreet));
+
+			assertSame(person.address.street, npeSafe(() -> person.getAddress().getStreet()));
+		}
+	}
+
+	static <U> U npeSafe(Supplier<U> s) {
+		try {
+			return s.get();
+		} catch (NullPointerException e) {
+			System.out.println("NPE");
+			return null;
+		}
 	}
 
 }

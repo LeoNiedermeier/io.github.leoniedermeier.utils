@@ -1,5 +1,6 @@
 package io.github.leoniedermeier.utils.web.advice;
 
+import static io.github.leoniedermeier.utils.test.HeaderErrorCodeMockMvcResultMatchers.headerErrorCode;
 import static io.github.leoniedermeier.utils.web.advice.RestExceptionHandler.HEADER_CID;
 import static io.github.leoniedermeier.utils.web.advice.RestExceptionHandler.HEADER_ERROR_CODES;
 import static org.hamcrest.Matchers.iterableWithSize;
@@ -12,13 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import io.github.leoniedermeier.utils.web.advice.TestRestController.MyErrorCodes;
 
-public class ExceptionHandlingTest {
+  class ExceptionHandlingTest {
 
 	private MockMvc mockMvc;
 
@@ -54,7 +53,5 @@ public class ExceptionHandlingTest {
 				.andExpect(headerErrorCode(MyErrorCodes.ERROR_CODE_WITH_HTTP_NOT_FOUND));
 	}
 
-	private static ResultMatcher headerErrorCode(MyErrorCodes errorCodeWithHttpNotFound) {
-		return header().stringValues(HEADER_ERROR_CODES, errorCodeWithHttpNotFound.code());
-	}
+ 
 }
