@@ -4,11 +4,13 @@ import static io.github.leoniedermeier.utils.beans.PropertyAccessor.get;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
 
 class PropertyAccessorTest {
 
@@ -80,6 +82,11 @@ class PropertyAccessorTest {
 			assertSame(person.address.street, get(person.getAddress(), Address::getStreet));
 
 			assertSame(person.address.street, npeSafe(() -> person.getAddress().getStreet()));
+
+			// Function<Person, Function<Person, Function<Address,String>>> x1 = p -> ( p ->
+			// p.getAddress() )
+			Function<Person, Function<Address, String>> x = p -> Address::getStreet;
+		
 		}
 	}
 

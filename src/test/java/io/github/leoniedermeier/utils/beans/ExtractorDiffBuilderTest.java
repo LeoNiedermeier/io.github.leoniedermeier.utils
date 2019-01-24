@@ -4,8 +4,6 @@ import org.apache.commons.lang3.builder.DiffResult;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.junit.jupiter.api.Test;
 
-import io.github.leoniedermeier.utils.beans.ExtractorDiffBuilder;
-
 class ExtractorDiffBuilderTest {
 
 	static class TestClass {

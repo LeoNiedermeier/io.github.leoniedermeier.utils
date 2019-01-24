@@ -1,6 +1,6 @@
 package io.github.leoniedermeier.utils.beans;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 import java.util.List;

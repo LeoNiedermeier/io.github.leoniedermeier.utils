@@ -1,6 +1,6 @@
 package io.github.leoniedermeier.utils.web.advice;
 
-import static io.github.leoniedermeier.utils.test.HeaderErrorCodeMockMvcResultMatchers.headerErrorCode;
+import static io.github.leoniedermeier.utils.test.web.advice.HeaderErrorCodeMockMvcResultMatchers.headerErrorCode;
 import static io.github.leoniedermeier.utils.web.advice.RestExceptionHandler.HEADER_CID;
 import static io.github.leoniedermeier.utils.web.advice.RestExceptionHandler.HEADER_ERROR_CODES;
 import static org.hamcrest.Matchers.iterableWithSize;
