@@ -1,6 +1,5 @@
 package io.github.leoniedermeier.utils.methodreference;
 
-import static io.github.leoniedermeier.utils.methodreference.DefaultValues.defaultValue;
 import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.not;
@@ -8,7 +7,6 @@ import static net.bytebuddy.matcher.ElementMatchers.not;
 import java.lang.reflect.Method;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.modifier.Visibility;
@@ -17,6 +15,7 @@ import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.Origin;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.implementation.bind.annotation.StubValue;
 
 public final class ByteBuddyTargetMethodDetector {
 
@@ -31,9 +30,9 @@ public final class ByteBuddyTargetMethodDetector {
 
 		@RuntimeType
 		public static Object intercept(@net.bytebuddy.implementation.bind.annotation.This MethodCapturer capturer,
-				@Origin Method method) {
+				@Origin Method method, @StubValue Object stubValue) {
 			capturer.setMethod(method);
-			return defaultValue(method.getReturnType());
+			return stubValue;
 		}
 	}
 
@@ -44,17 +43,19 @@ public final class ByteBuddyTargetMethodDetector {
 	}
 
 	public static <T> Method resolve(Class<T> type, Consumer<? super T> method) {
-		T proxy = getPropertyNameCapturer(type);
+		T proxy = createProxy(type);
 		method.accept(proxy);
 		return ((MethodCapturer) proxy).getMethod();
 	}
 
-	private static <T> T /* & MethodCapturer */ getPropertyNameCapturer(Class<T> type) {
+	private static <T> T /* & MethodCapturer */ createProxy(Class<T> type) {
 
 		Class<? extends T> proxyType = new ByteBuddy().subclass(type)
+				// Select where to apply interceptor:
 				.method(not(isDeclaredBy(Object.class)).and(not(isDeclaredBy(MethodCapturer.class))))
 				.intercept(MethodDelegation.to(MethodNameCapturingInterceptor.class))
-
+				
+				// a new field in the class, where the interceptor can store the called method.
 				.implement(MethodCapturer.class).defineField("method", Method.class, Visibility.PRIVATE)//
 				.method(named("setMethod").or(named("getMethod"))).intercept(FieldAccessor.ofBeanProperty())
 
@@ -71,8 +72,5 @@ public final class ByteBuddyTargetMethodDetector {
 	private ByteBuddyTargetMethodDetector() {
 		throw new AssertionError("No ByteBuddyTargetMethodDetector instances for you!");
 
-	}
-
-	public <T, P> void validateValue(Class<T> type, Function<? super T, P> property, P value) {
 	}
 }

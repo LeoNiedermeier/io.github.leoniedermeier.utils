@@ -36,6 +36,7 @@ class ByteBuddyTargetMethodDetectorTest {
 		assertMethodName("getVoid", Person.class, Person::getVoid);
 
 		assertMethodName("getName", Person.class, Person::getName);
+		assertMethodName("getInt", Person.class, Person::getInt);
 	}
 
 	@Test
