@@ -1,7 +1,5 @@
 package io.github.leoniedermeier.utils.methodreference;
 
-import static io.github.leoniedermeier.utils.methodreference.DefaultValues.defaultValue;
-
 import java.lang.reflect.Method;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -50,5 +48,33 @@ public final class SpringAopProxyTargetMethodDetector {
 
 	private SpringAopProxyTargetMethodDetector() {
 		throw new AssertionError("No SpringAopProxyTargetMethodDetector instances for you!");
+	}
+	
+	private static Object defaultValue(Class<?> cls) {
+		if (cls == Integer.TYPE) {
+			return Integer.valueOf(0);
+		}
+		if (cls == Long.TYPE) {
+			return Long.valueOf(0L);
+		}
+		if (cls == Boolean.TYPE) {
+			return Boolean.FALSE;
+		}
+		if (cls == Double.TYPE) {
+			return Double.valueOf(0.0);
+		}
+		if (cls == Float.TYPE) {
+			return Float.valueOf(0.0f);
+		}
+		if (cls == Byte.TYPE) {
+			return Byte.valueOf((byte) 0);
+		}
+		if (cls == Short.TYPE) {
+			return Short.valueOf((short) 0);
+		}
+		if (cls == Character.TYPE) {
+			return '\0';
+		}
+		return null;
 	}
 }

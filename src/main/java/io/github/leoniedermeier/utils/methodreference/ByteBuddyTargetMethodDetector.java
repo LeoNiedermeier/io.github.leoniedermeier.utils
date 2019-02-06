@@ -1,7 +1,6 @@
 package io.github.leoniedermeier.utils.methodreference;
 
 import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
-import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.not;
 
 import java.lang.reflect.Method;
@@ -16,6 +15,7 @@ import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.Origin;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import net.bytebuddy.implementation.bind.annotation.StubValue;
+import net.bytebuddy.implementation.bind.annotation.This;
 
 public final class ByteBuddyTargetMethodDetector {
 
@@ -26,11 +26,11 @@ public final class ByteBuddyTargetMethodDetector {
 		void setMethod(Method method);
 	}
 
-	public static class MethodNameCapturingInterceptor {
+	public static class MethodCapturingInterceptor {
 
 		@RuntimeType
-		public static Object intercept(@net.bytebuddy.implementation.bind.annotation.This MethodCapturer capturer,
-				@Origin Method method, @StubValue Object stubValue) {
+		public static Object intercept(@This MethodCapturer capturer, @Origin Method method,
+				@StubValue Object stubValue) {
 			capturer.setMethod(method);
 			return stubValue;
 		}
@@ -53,14 +53,13 @@ public final class ByteBuddyTargetMethodDetector {
 		Class<? extends T> proxyType = new ByteBuddy().subclass(type)
 				// Select where to apply interceptor:
 				.method(not(isDeclaredBy(Object.class)).and(not(isDeclaredBy(MethodCapturer.class))))
-				.intercept(MethodDelegation.to(MethodNameCapturingInterceptor.class))
-				
+				.intercept(MethodDelegation.to(MethodCapturingInterceptor.class))
+
 				// a new field in the class, where the interceptor can store the called method.
-				.implement(MethodCapturer.class).defineField("method", Method.class, Visibility.PRIVATE)//
-				.method(named("setMethod").or(named("getMethod"))).intercept(FieldAccessor.ofBeanProperty())
+				.defineField("method", Method.class, Visibility.PRIVATE)//
+				.implement(MethodCapturer.class).intercept(FieldAccessor.ofBeanProperty())
 
 				.make().load(type.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER).getLoaded();
-
 		try {
 			// only no argument constructors
 			return proxyType.newInstance();
@@ -71,6 +70,5 @@ public final class ByteBuddyTargetMethodDetector {
 
 	private ByteBuddyTargetMethodDetector() {
 		throw new AssertionError("No ByteBuddyTargetMethodDetector instances for you!");
-
 	}
 }
