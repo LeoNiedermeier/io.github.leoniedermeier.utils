@@ -1,10 +1,13 @@
 package io.github.leoniedermeier.utils.test.beans;
 
+import java.util.Random;
 import java.util.UUID;
 
 import org.opentest4j.IncompleteExecutionException;
 
 final class BeanTesterUtils {
+
+	private static final Random random = new Random();
 
 	static <T> T newInstance(Class<T> clazz) {
 		try {
@@ -14,31 +17,32 @@ final class BeanTesterUtils {
 					"Can not create instance of class" + clazz + "by default constructor. ", e);
 		}
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	static <T> T randomValue(Class<T> cls) {
 		if (cls == Integer.TYPE) {
-			return (T) Integer.valueOf(BeanSetterGetterTester.random.nextInt());
+			return (T) Integer.valueOf(random.nextInt());
 		}
 		if (cls == Long.TYPE) {
-			return (T) Long.valueOf(BeanSetterGetterTester.random.nextLong());
+			return (T) Long.valueOf(random.nextLong());
 		}
 		if (cls == Boolean.TYPE) {
-			return (T) Boolean.valueOf(BeanSetterGetterTester.random.nextBoolean());
+			return (T) Boolean.valueOf(random.nextBoolean());
 		}
 		if (cls == Double.TYPE) {
-			return (T) Double.valueOf(BeanSetterGetterTester.random.nextDouble());
+			return (T) Double.valueOf(random.nextDouble());
 		}
 		if (cls == Float.TYPE) {
 			return (T) Float.valueOf(0.0f);
 		}
 		if (cls == Byte.TYPE) {
-			return (T) Byte.valueOf((byte) BeanSetterGetterTester.random.nextInt(Byte.MAX_VALUE));
+			return (T) Byte.valueOf((byte) random.nextInt(Byte.MAX_VALUE));
 		}
 		if (cls == Short.TYPE) {
-			return (T) Short.valueOf((short) BeanSetterGetterTester.random.nextInt(Short.MAX_VALUE));
+			return (T) Short.valueOf((short) random.nextInt(Short.MAX_VALUE));
 		}
 		if (cls == Character.TYPE) {
-			return (T) Character.valueOf((char) (BeanSetterGetterTester.random.nextInt('z' - 'a') + 'a'));
+			return (T) Character.valueOf((char) (random.nextInt('z' - 'a') + 'a'));
 		}
 		if (cls == String.class) {
 			// random String

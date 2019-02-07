@@ -16,18 +16,19 @@ import io.github.leoniedermeier.utils.methodreference.MethodDetectorTestHelperCl
 
 class SpringAopProxyTargetMethodDetectorTest {
 
-	static <T> void assertMethodName(String expected, Class<T> type, Consumer<T> method) {
-		Method expectedMethod = resolve(type, method);
-		assertEquals(expected, expectedMethod.getName());
-	}
+	private	static <T, U> void assertMethodName(String expected, Class<T> type, BiConsumer<T, U> method) {
+			Method expectedMethod = resolve(type, method);
+			assertEquals(expected, expectedMethod.getName());
+		}
 
-	static <T, U> void assertMethodName(String expected, Class<T> type, BiConsumer<T, U> method) {
+	private static <T> void assertMethodName(String expected, Class<T> type, Consumer<T> method) {
 		Method expectedMethod = resolve(type, method);
 		assertEquals(expected, expectedMethod.getName());
 	}
 
 	@Test
 	void call_abstract_method_from_abstract_class() {
+		// cglib can instantiate abstract class
 		assertMethodName("getVoid", AbstractClass.class, AbstractClass::getVoid);
 	}
 

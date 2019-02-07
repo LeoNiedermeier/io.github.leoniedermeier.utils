@@ -2,7 +2,6 @@ package io.github.leoniedermeier.utils.test.beans;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -24,6 +23,7 @@ public class BeanSetterGetterTester {
 //		Class<?> setterArgumentType = resolveRawArguments[1];
 //		Object inputValue = randomValue(setterArgumentType);
 
+		// Target methods are also useful for error message.
 		Method setMethod = ByteBuddyTargetMethodDetector.resolve(beanClass,
 				(Consumer<B>) b -> setter.accept(b, null));
 
@@ -45,6 +45,4 @@ public class BeanSetterGetterTester {
 			throw new AssertionFailedError(message, inputValue, outputValue);
 		}
 	}
-
-	static final Random random = new Random();
 }

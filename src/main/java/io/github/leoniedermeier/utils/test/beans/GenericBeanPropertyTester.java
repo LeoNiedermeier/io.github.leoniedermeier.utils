@@ -16,7 +16,7 @@ import org.opentest4j.MultipleFailuresError;
 
 public final class GenericBeanPropertyTester {
 
-	public static <B> void assertAllSettersGetters(Class<B> beanClass) {
+	public static <B> void testAllSettersGetters(Class<B> beanClass) {
 		final BeanInfo beanInfo;
 		try {
 			beanInfo = Introspector.getBeanInfo(beanClass);

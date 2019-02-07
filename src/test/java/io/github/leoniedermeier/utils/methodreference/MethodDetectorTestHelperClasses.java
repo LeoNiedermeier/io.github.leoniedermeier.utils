@@ -5,7 +5,7 @@ public interface MethodDetectorTestHelperClasses {
 	public interface MyInterface {
 		void getVoid();
 	}
-	
+
 	public class Person {
 
 		public Person() {
@@ -30,7 +30,7 @@ public interface MethodDetectorTestHelperClasses {
 		public void getVoid() {
 		}
 	}
-	
+
 	public class WithConstructorArgument {
 		public WithConstructorArgument(String param) {
 		}
@@ -38,7 +38,7 @@ public interface MethodDetectorTestHelperClasses {
 		public void getVoid() {
 		}
 	}
-	
+
 	public abstract class AbstractClass {
 		public AbstractClass() {
 		}

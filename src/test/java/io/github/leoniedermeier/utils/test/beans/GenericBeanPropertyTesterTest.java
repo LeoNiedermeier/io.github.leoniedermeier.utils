@@ -9,13 +9,13 @@ class GenericBeanPropertyTesterTest {
 
 	@Test
 	void all_properties_ok() {
-		GenericBeanPropertyTester.assertAllSettersGetters(MyBean.class);
+		GenericBeanPropertyTester.testAllSettersGetters(MyBean.class);
 	}
 
 	@Test
 	void wrong_property_throws_exception() {
 		assertThrows(MultipleFailuresError.class,
-				() -> GenericBeanPropertyTester.assertAllSettersGetters(MyErrorBean.class));
+				() -> GenericBeanPropertyTester.testAllSettersGetters(MyErrorBean.class));
 	}
 
 	public static class MyBean {
