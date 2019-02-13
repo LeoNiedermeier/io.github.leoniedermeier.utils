@@ -1,12 +1,13 @@
 package io.github.leoniedermeier.utils.test.beans;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import java.lang.reflect.Method;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import org.opentest4j.AssertionFailedError;
+import java.util.function.Supplier;
 
 import io.github.leoniedermeier.utils.methodreference.ByteBuddyTargetMethodDetector;
 
@@ -24,9 +25,9 @@ public class BeanSetterGetterTester {
 //		Object inputValue = randomValue(setterArgumentType);
 
 		// Target methods are also useful for error message.
-		Method setMethod = ByteBuddyTargetMethodDetector.resolve(beanClass,
-				(Consumer<B>) b -> setter.accept(b, null));
+		Method setMethod = ByteBuddyTargetMethodDetector.resolve(beanClass, (Consumer<B>) b -> setter.accept(b, null));
 
+		@SuppressWarnings("unchecked")
 		Class<T> setMethodParameterType = (Class<T>) setMethod.getParameters()[0].getType();
 		T inputValue = BeanTesterUtils.randomValue(setMethodParameterType);
 
@@ -35,14 +36,17 @@ public class BeanSetterGetterTester {
 		setter.accept(bean, inputValue);
 
 		T outputValue = getter.apply(bean);
-		if (setMethodParameterType.isPrimitive() ? !Objects.equals(inputValue, outputValue)
-				: inputValue != outputValue) {
 
-			Method getMethod = ByteBuddyTargetMethodDetector.resolve(beanClass,
-					(Consumer<B>) b -> getter.apply(b));
-			String message = "Reason: Setter - Getter different values!" + "\nset-method: " + setMethod.getName()
+		Supplier<String> message = () -> {
+			Method getMethod = ByteBuddyTargetMethodDetector.resolve(beanClass, (Consumer<B>) b -> getter.apply(b));
+			return "Reason: Setter - Getter different values!" + "\nset-method: " + setMethod.getName()
 					+ "\nget-method: " + getMethod.getName();
-			throw new AssertionFailedError(message, inputValue, outputValue);
+		};
+		
+		if (setMethodParameterType.isPrimitive()) {
+			assertEquals(inputValue, outputValue, message);
+		} else {
+			assertSame(inputValue, outputValue, message);
 		}
 	}
 }

@@ -6,5 +6,6 @@ public interface EnumErrorCode extends ErrorCode {
 	default String code() {
 		return name();
 	}
+	
 	String name();
 }

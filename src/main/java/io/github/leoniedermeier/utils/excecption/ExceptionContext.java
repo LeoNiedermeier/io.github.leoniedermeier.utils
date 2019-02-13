@@ -71,7 +71,7 @@ public interface ExceptionContext<T extends ExceptionContext<T>> {
 	 * @param value The value of item to add, may be {@code null}
 	 * @return {@code this}, for method chaining, not {@code null}
 	 */
-
+	@SuppressWarnings("unchecked")
 	default T addContextValue(final String label, final Object value) {
 		getContextEntries().add(new Entry(label, value));
 		return (T) this;

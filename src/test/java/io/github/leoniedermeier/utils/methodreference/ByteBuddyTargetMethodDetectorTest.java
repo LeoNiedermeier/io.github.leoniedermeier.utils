@@ -2,7 +2,6 @@ package io.github.leoniedermeier.utils.methodreference;
 
 import static io.github.leoniedermeier.utils.methodreference.ByteBuddyTargetMethodDetector.resolve;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Method;
 import java.util.function.BiConsumer;
@@ -52,8 +51,7 @@ class ByteBuddyTargetMethodDetectorTest {
 
 	@Test
 	void call_method_from_class_with_constructor_with_argument() {
-
-		assertThrows(RuntimeException.class, () -> ByteBuddyTargetMethodDetector.resolve(WithConstructorArgument.class,
-				WithConstructorArgument::getVoid));
+		assertMethodName("getVoid", WithConstructorArgument.class, WithConstructorArgument::getVoid);
 	}
+
 }

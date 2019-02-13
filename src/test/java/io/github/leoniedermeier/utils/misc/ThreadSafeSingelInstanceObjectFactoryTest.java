@@ -2,6 +2,7 @@ package io.github.leoniedermeier.utils.misc;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ThreadSafeSingelInstanceObjectFactoryTest {
@@ -13,7 +14,8 @@ public class ThreadSafeSingelInstanceObjectFactoryTest {
 	}
 
 	@Test
-	void test1() {
+	@DisplayName("Same instance is returned by multiple calls to getInstance method")
+	void same_instance_returned_from_multiple_calls() {
 		MyBean instance_1 = getInstance();
 		MyBean instance_2 = getInstance();
 		assertSame(instance_1, instance_2);

@@ -7,6 +7,8 @@ import java.lang.reflect.Method;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import org.objenesis.ObjenesisHelper;
+
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
@@ -17,6 +19,9 @@ import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import net.bytebuddy.implementation.bind.annotation.StubValue;
 import net.bytebuddy.implementation.bind.annotation.This;
 
+/**
+ * Bytebuddy und Objensis kommen mit mockito mit.
+ */
 public final class ByteBuddyTargetMethodDetector {
 
 	public interface MethodCapturer {
@@ -60,12 +65,7 @@ public final class ByteBuddyTargetMethodDetector {
 				.implement(MethodCapturer.class).intercept(FieldAccessor.ofBeanProperty())
 
 				.make().load(type.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER).getLoaded();
-		try {
-			// only no argument constructors
-			return proxyType.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException("Couldn't instantiate proxy for method name retrieval", e);
-		}
+		return ObjenesisHelper.newInstance(proxyType);
 	}
 
 	private ByteBuddyTargetMethodDetector() {

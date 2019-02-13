@@ -49,7 +49,13 @@ class GenericBeanPropertyTesterTest {
 		public String getWrong() {
 			return "WRONG";
 		}
+		public void setNumber(int number) {
+			 
+		}
 
+		public int getNumber() {
+			return 12;
+		}
 	}
 
 }
