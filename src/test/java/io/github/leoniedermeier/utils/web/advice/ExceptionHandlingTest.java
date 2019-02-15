@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import io.github.leoniedermeier.utils.web.advice.TestRestController.MyErrorCodes;
 
-  class ExceptionHandlingTest {
+class ExceptionHandlingTest {
 
 	private MockMvc mockMvc;
 
@@ -53,5 +53,4 @@ import io.github.leoniedermeier.utils.web.advice.TestRestController.MyErrorCodes
 				.andExpect(headerErrorCode(MyErrorCodes.ERROR_CODE_WITH_HTTP_NOT_FOUND));
 	}
 
- 
 }

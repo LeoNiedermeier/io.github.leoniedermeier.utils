@@ -9,6 +9,7 @@ import io.github.leoniedermeier.utils.excecption.EnumErrorCode;
 @org.springframework.web.bind.annotation.RestController
 class TestRestController {
 
+
 	public TestRestController() {
 		super();
 	}
