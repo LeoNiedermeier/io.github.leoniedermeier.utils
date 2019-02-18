@@ -3,6 +3,7 @@ package io.github.leoniedermeier.utils.methodreference;
 import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
 import static net.bytebuddy.matcher.ElementMatchers.not;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -48,6 +49,7 @@ public final class ByteBuddyTargetMethodDetector {
 	}
 
 	public static <T> Method resolve(Class<T> type, Consumer<? super T> method) {
+		System.out.println(method instanceof Serializable);
 		T proxy = createProxy(type);
 		method.accept(proxy);
 		return ((MethodCapturer) proxy).getMethod();
