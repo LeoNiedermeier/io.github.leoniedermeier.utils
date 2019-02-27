@@ -7,14 +7,13 @@ import java.util.Objects;
  */
 public interface ErrorCode {
 
-	/**
-	 * Returns a string representation of the error code.
-	 */
-	String code();
-	
-	
-	default boolean equalsTo(ErrorCode other) {
-		return other != null && Objects.equals(code(), other.code());
-	}
-	
+    /**
+     * Returns a string representation of the error code.
+     */
+    String code();
+
+    default boolean equalsTo(ErrorCode other) {
+        return other != null && Objects.equals(code(), other.code());
+    }
+
 }

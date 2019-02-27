@@ -3,7 +3,6 @@ package io.github.leoniedermeier.utils.methodreference;
 import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
 import static net.bytebuddy.matcher.ElementMatchers.not;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -25,52 +24,55 @@ import net.bytebuddy.implementation.bind.annotation.This;
  */
 public final class ByteBuddyTargetMethodDetector {
 
-	public interface MethodCapturer {
+    public interface MethodCapturer {
 
-		Method getMethod();
+        Method getMethod();
 
-		void setMethod(Method method);
-	}
+        void setMethod(Method method);
+    }
 
-	public static class MethodCapturingInterceptor {
+    public static class MethodCapturingInterceptor {
 
-		@RuntimeType
-		public static Object intercept(@This MethodCapturer capturer, @Origin Method method,
-				@StubValue Object stubValue) {
-			capturer.setMethod(method);
-			return stubValue;
-		}
-	}
+        @RuntimeType
+        public static Object intercept(@This MethodCapturer capturer, @Origin Method method,
+                @StubValue Object stubValue) {
+            capturer.setMethod(method);
+            return stubValue;
+        }
 
-	public static <T, U> Method resolve(Class<T> type, BiConsumer<? super T, U> method) {
-		return resolve(type,
-				// aus einem BiConsumer wird ein Consumer
-				p -> method.accept(p, null));
-	}
+        private MethodCapturingInterceptor() {
+            throw new AssertionError("No MethodCapturingInterceptor instances for you!");
+        }
+    }
 
-	public static <T> Method resolve(Class<T> type, Consumer<? super T> method) {
-		System.out.println(method instanceof Serializable);
-		T proxy = createProxy(type);
-		method.accept(proxy);
-		return ((MethodCapturer) proxy).getMethod();
-	}
+    public static <T, U> Method resolve(Class<T> type, BiConsumer<? super T, U> method) {
+        return resolve(type,
+                // aus einem BiConsumer wird ein Consumer
+                p -> method.accept(p, null));
+    }
 
-	private static <T> T /* & MethodCapturer */ createProxy(Class<T> type) {
+    public static <T> Method resolve(Class<T> type, Consumer<? super T> method) {
+        T proxy = createProxy(type);
+        method.accept(proxy);
+        return ((MethodCapturer) proxy).getMethod();
+    }
 
-		Class<? extends T> proxyType = new ByteBuddy().subclass(type)
-				// Select where to apply interceptor:
-				.method(not(isDeclaredBy(Object.class)).and(not(isDeclaredBy(MethodCapturer.class))))
-				.intercept(MethodDelegation.to(MethodCapturingInterceptor.class))
+    private static <T> T /* & MethodCapturer */ createProxy(Class<T> type) {
 
-				// a new field in the class, where the interceptor can store the called method.
-				.defineField("method", Method.class, Visibility.PRIVATE)//
-				.implement(MethodCapturer.class).intercept(FieldAccessor.ofBeanProperty())
+        Class<? extends T> proxyType = new ByteBuddy().subclass(type)
+                // Select where to apply interceptor:
+                .method(not(isDeclaredBy(Object.class)).and(not(isDeclaredBy(MethodCapturer.class))))
+                .intercept(MethodDelegation.to(MethodCapturingInterceptor.class))
 
-				.make().load(type.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER).getLoaded();
-		return ObjenesisHelper.newInstance(proxyType);
-	}
+                // a new field in the class, where the interceptor can store the called method.
+                .defineField("method", Method.class, Visibility.PRIVATE)//
+                .implement(MethodCapturer.class).intercept(FieldAccessor.ofBeanProperty())
 
-	private ByteBuddyTargetMethodDetector() {
-		throw new AssertionError("No ByteBuddyTargetMethodDetector instances for you!");
-	}
+                .make().load(type.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER).getLoaded();
+        return ObjenesisHelper.newInstance(proxyType);
+    }
+
+    private ByteBuddyTargetMethodDetector() {
+        throw new AssertionError("No ByteBuddyTargetMethodDetector instances for you!");
+    }
 }

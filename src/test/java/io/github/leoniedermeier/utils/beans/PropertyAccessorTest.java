@@ -1,102 +1,104 @@
 package io.github.leoniedermeier.utils.beans;
 
 import static io.github.leoniedermeier.utils.beans.PropertyAccessor.get;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import io.github.leoniedermeier.utils.test.junit.jupiter.UtilClassConventionsTester;
 
 class PropertyAccessorTest {
 
-	static class Address {
-		String street;
+    static class Address {
+        String street;
 
-		public String getStreet() {
-			return street;
-		}
-	}
+        public String getStreet() {
+            return this.street;
+        }
+    }
 
-	static class Person {
-		Address address;
+    static class Person {
+        Address address;
 
-		public Address getAddress() {
-			return address;
-		}
-	}
+        public Address getAddress() {
+            return this.address;
+        }
+    }
 
-	@Nested
-	@DisplayName("Test for get(T, Function)")
-	class TestGet1 {
-		@Test
-		@DisplayName("Existing property: value")
-		void property_get_existing() {
-			Person person = new Person();
-			person.address = new Address();
-			Address result = PropertyAccessor.get(person, Person::getAddress);
+    @Nested
+    @DisplayName("Method: get(T, Function)")
+    class TestGetOneMethodReference {
+        @Test
+        @DisplayName("Existing property: value")
+        void property_get_existing() {
+            Person person = new Person();
+            person.address = new Address();
+            Address result = PropertyAccessor.get(person, Person::getAddress);
+            assertThat(result, sameInstance(person.address));
+        }
 
-			assertSame(person.address, result);
-		}
+        @Test
+        @DisplayName("Null property: returns null")
+        void property_get_null_throws_exception() {
+            Person person = new Person();
+            Address result = PropertyAccessor.get(person, Person::getAddress);
+            assertThat(result, nullValue());
+        }
+    }
 
-		@Test
-		@DisplayName("Null property: returns null")
-		void property_get_null_throws_exception() {
-			Person person = new Person();
-			Address result = PropertyAccessor.get(person, Person::getAddress);
-			assertNull(result);
-		}
-	}
+    @Nested
+    @DisplayName("Method: get(T, Function, Function)")
+    class TestGetWithTwoMethodRefernces {
 
-	@Nested
-	@DisplayName("Test for get(T, Function, Function)")
-	class TestGet2 {
+        @Test
+        @DisplayName("Existing nested properties")
+        void existing_nested_properties() {
+            Person person = new Person();
+            person.address = new Address();
+            person.address.street = "Street";
 
-		@Test
-		@DisplayName("Not existing nested properties")
-		void not_existing_nested_properties() {
-			Person person = new Person();
-			String result = PropertyAccessor.get(person, Person::getAddress, Address::getStreet);
-			assertNull(result);
+            assertThat(get(person, p -> p.getAddress(), a -> a.getStreet()), sameInstance(person.address.street));
 
-			assertNull(npeSafe(() -> person.address.street));
+            // oder:
+            assertSame(person.address.street, get(person, p -> p.getAddress(), a -> a.getStreet()));
 
-		}
+            assertSame(person.address.street, get(person, Person::getAddress, Address::getStreet));
 
-		@Test
-		@DisplayName("Existing nested properties")
-		void existing_nested_properties() {
-			Person person = new Person();
-			person.address = new Address();
-			person.address.street = "Street";
+            assertSame(person.address.street, get(person.getAddress(), Address::getStreet));
 
-			assertSame(person.address.street, get(person, p -> p.getAddress(), a -> a.getStreet()));
+            assertSame(person.address.street, npeSafe(() -> person.getAddress().getStreet()));
+        }
 
-			// oder:
-			assertSame(person.address.street, get(person, Person::getAddress, Address::getStreet));
+        @Test
+        @DisplayName("Not existing nested properties")
+        void not_existing_nested_properties() {
+            Person person = new Person();
+            String result = PropertyAccessor.get(person, Person::getAddress, Address::getStreet);
+            assertThat(result, nullValue());
 
-			assertSame(person.address.street, get(person.getAddress(), Address::getStreet));
+            assertNull(npeSafe(() -> person.address.street));
 
-			assertSame(person.address.street, npeSafe(() -> person.getAddress().getStreet()));
+        }
+    }
 
-			// Function<Person, Function<Person, Function<Address,String>>> x1 = p -> ( p ->
-			// p.getAddress() )
-			Function<Person, Function<Address, String>> x = p -> Address::getStreet;
-		
-		}
-	}
+    @Nested
+    class UtilClassConventions implements UtilClassConventionsTester<PropertyAccessor> {
 
-	static <U> U npeSafe(Supplier<U> s) {
-		try {
-			return s.get();
-		} catch (NullPointerException e) {
-			System.out.println("NPE");
-			return null;
-		}
-	}
+    }
 
+    static <U> U npeSafe(Supplier<U> s) {
+        try {
+            return s.get();
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
 }

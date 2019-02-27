@@ -7,55 +7,56 @@ import org.opentest4j.MultipleFailuresError;
 
 class GenericBeanPropertyTesterTest {
 
-	@Test
-	void all_properties_ok() {
-		GenericBeanPropertyTester.testAllSettersGetters(MyBean.class);
-	}
+    @Test
+    void all_properties_ok() {
+        GenericBeanPropertyTester.testAllSettersGetters(MyBean.class);
+    }
 
-	@Test
-	void wrong_property_throws_exception() {
-		assertThrows(MultipleFailuresError.class,
-				() -> GenericBeanPropertyTester.testAllSettersGetters(MyErrorBean.class));
-	}
+    @Test
+    void wrong_property_throws_exception() {
+        assertThrows(MultipleFailuresError.class,
+                () -> GenericBeanPropertyTester.testAllSettersGetters(MyErrorBean.class));
+    }
 
-	public static class MyBean {
-		private String name;
+    public static class MyBean {
+        private String name;
 
-		private int number;
+        private int number;
 
-		public void setNumber(int number) {
-			this.number = number;
-		}
+        public void setNumber(int number) {
+            this.number = number;
+        }
 
-		public int getNumber() {
-			return number;
-		}
+        public int getNumber() {
+            return this.number;
+        }
 
-		public void setName(String name) {
-			this.name = name;
-		}
+        public void setName(String name) {
+            this.name = name;
+        }
 
-		public String getName() {
-			return name;
-		}
+        public String getName() {
+            return this.name;
+        }
 
-	}
+    }
 
-	public static class MyErrorBean {
+    public static class MyErrorBean {
 
-		public void setWrong(String wrong) {
-		}
+        public void setWrong(String wrong) {
+        }
 
-		public String getWrong() {
-			return "WRONG";
-		}
-		public void setNumber(int number) {
-			 
-		}
+        public String getWrong() {
+            return "WRONG";
+        }
 
-		public int getNumber() {
-			return 12;
-		}
-	}
+        public void setNumber(int number) {
+
+        }
+
+        public int getNumber() {
+            return 12;
+        }
+    }
 
 }

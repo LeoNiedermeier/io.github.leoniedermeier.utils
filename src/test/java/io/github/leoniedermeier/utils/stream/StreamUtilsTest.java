@@ -14,17 +14,16 @@ import org.junit.jupiter.api.Test;
 
 class StreamUtilsTest {
 
-	@Test
-	void filterInstances_matches() {
-		List<String> result = Stream.of("x", 1, "y").flatMap(filterInstances(String.class)).collect(toList());
-		assertIterableEquals(result, asList("x", "y"));
-	}
+    @Test
+    void filterInstances_matches() {
+        List<String> result = Stream.of("x", 1, "y").flatMap(filterInstances(String.class)).collect(toList());
+        assertIterableEquals(asList("x", "y"), result);
+    }
 
-	@Test
-	void filterInstances_no_matches() {
-		List<LocalDate> result = Stream.of("x", 1, "y").flatMap(filterInstances(LocalDate.class)).collect(toList());
-		assertTrue(result.isEmpty());
-
-	}
+    @Test
+    void filterInstances_no_matches() {
+        List<LocalDate> result = Stream.of("x", 1, "y").flatMap(filterInstances(LocalDate.class)).collect(toList());
+        assertTrue(result.isEmpty());
+    }
 
 }

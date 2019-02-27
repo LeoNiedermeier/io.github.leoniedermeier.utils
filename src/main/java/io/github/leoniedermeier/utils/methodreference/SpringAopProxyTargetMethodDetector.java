@@ -1,6 +1,8 @@
 package io.github.leoniedermeier.utils.methodreference;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -12,69 +14,53 @@ import org.springframework.aop.framework.DefaultAopProxyFactory;
 
 public final class SpringAopProxyTargetMethodDetector {
 
-	private static class TargetMethodSavingMethodInterceptor implements MethodInterceptor {
+    private static class TargetMethodSavingMethodInterceptor implements MethodInterceptor {
+        private static Map<Class<?>, Object> DEFAULT_VALUES = new HashMap<>();
 
-		private Method method;
+        static {
+            DEFAULT_VALUES.put(Integer.TYPE, Integer.valueOf(0));
+            DEFAULT_VALUES.put(Long.TYPE, Long.valueOf(0));
+            DEFAULT_VALUES.put(Boolean.TYPE, Boolean.FALSE);
+            DEFAULT_VALUES.put(Double.TYPE, Double.valueOf(0));
+            DEFAULT_VALUES.put(Float.TYPE, Float.valueOf(0));
+            DEFAULT_VALUES.put(Byte.TYPE, Byte.valueOf((byte) 0));
+            DEFAULT_VALUES.put(Short.TYPE, Short.valueOf((short) 0));
+            DEFAULT_VALUES.put(Character.TYPE, '\0');
+        }
 
-		@Override
-		public Object invoke(MethodInvocation invocation) throws Throwable {
-			method = invocation.getMethod();
-			return defaultValue(method.getReturnType());
-		}
-	}
+        private Method method;
 
-	public static <T, U> Method resolve(Class<T> type, BiConsumer<? super T, U> method) {
-		return resolve(type,
-				// aus einem BiConsumer wird ein Consumer
-				p -> method.accept(p, null));
-	}
+        @Override
+        public Object invoke(MethodInvocation invocation) throws Throwable {
+            this.method = invocation.getMethod();
+            return DEFAULT_VALUES.get(this.method.getReturnType());
+        }
+    }
 
-	public static <T> Method resolve(Class<T> type, Consumer<? super T> method) {
+    public static <T, U> Method resolve(Class<T> type, BiConsumer<? super T, U> method) {
+        return resolve(type,
+                // aus einem BiConsumer wird ein Consumer
+                p -> method.accept(p, null));
+    }
 
-		AdvisedSupport config = new AdvisedSupport();
-		config.setTargetClass(type);
+    public static <T> Method resolve(Class<T> type, Consumer<? super T> method) {
 
-		TargetMethodSavingMethodInterceptor mi = new TargetMethodSavingMethodInterceptor();
-		config.addAdvice(mi);
-		DefaultAopProxyFactory defaultAopProxyFactory = new DefaultAopProxyFactory();
-		AopProxy aopProxy = defaultAopProxyFactory.createAopProxy(config);
+        AdvisedSupport config = new AdvisedSupport();
+        config.setTargetClass(type);
 
-		@SuppressWarnings("unchecked")
-		T proxy = (T) aopProxy.getProxy(type.getClassLoader());
+        TargetMethodSavingMethodInterceptor mi = new TargetMethodSavingMethodInterceptor();
+        config.addAdvice(mi);
+        DefaultAopProxyFactory defaultAopProxyFactory = new DefaultAopProxyFactory();
+        AopProxy aopProxy = defaultAopProxyFactory.createAopProxy(config);
 
-		method.accept(proxy);
-		return mi.method;
-	}
+        @SuppressWarnings("unchecked")
+        T proxy = (T) aopProxy.getProxy(type.getClassLoader());
 
-	private SpringAopProxyTargetMethodDetector() {
-		throw new AssertionError("No SpringAopProxyTargetMethodDetector instances for you!");
-	}
-	
-	private static Object defaultValue(Class<?> cls) {
-		if (cls == Integer.TYPE) {
-			return Integer.valueOf(0);
-		}
-		if (cls == Long.TYPE) {
-			return Long.valueOf(0L);
-		}
-		if (cls == Boolean.TYPE) {
-			return Boolean.FALSE;
-		}
-		if (cls == Double.TYPE) {
-			return Double.valueOf(0.0);
-		}
-		if (cls == Float.TYPE) {
-			return Float.valueOf(0.0f);
-		}
-		if (cls == Byte.TYPE) {
-			return Byte.valueOf((byte) 0);
-		}
-		if (cls == Short.TYPE) {
-			return Short.valueOf((short) 0);
-		}
-		if (cls == Character.TYPE) {
-			return '\0';
-		}
-		return null;
-	}
+        method.accept(proxy);
+        return mi.method;
+    }
+
+    private SpringAopProxyTargetMethodDetector() {
+        throw new AssertionError("No SpringAopProxyTargetMethodDetector instances for you!");
+    }
 }

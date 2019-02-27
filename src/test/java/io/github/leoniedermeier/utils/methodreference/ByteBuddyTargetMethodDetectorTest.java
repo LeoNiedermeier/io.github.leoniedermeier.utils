@@ -15,43 +15,43 @@ import io.github.leoniedermeier.utils.methodreference.MethodDetectorTestHelperCl
 import io.github.leoniedermeier.utils.methodreference.MethodDetectorTestHelperClasses.WithConstructorArgument;
 
 class ByteBuddyTargetMethodDetectorTest {
-	static <T> void assertMethodName(String expected, Class<T> type, Consumer<T> method) {
-		Method expectedMethod = resolve(type, method);
-		assertEquals(expected, expectedMethod.getName());
-	}
+    static <T> void assertMethodName(String expected, Class<T> type, Consumer<T> method) {
+        Method expectedMethod = resolve(type, method);
+        assertEquals(expected, expectedMethod.getName());
+    }
 
-	static <T, U> void assertMethodName(String expected, Class<T> type, BiConsumer<T, U> method) {
-		Method expectedMethod = resolve(type, method);
-		assertEquals(expected, expectedMethod.getName());
-	}
+    static <T, U> void assertMethodName(String expected, Class<T> type, BiConsumer<T, U> method) {
+        Method expectedMethod = resolve(type, method);
+        assertEquals(expected, expectedMethod.getName());
+    }
 
-	@Test
-	void call_abstract_method_from_abstract_class() {
-		assertMethodName("getVoid", AbstractClass.class, AbstractClass::getVoid);
-	}
+    @Test
+    void call_abstract_method_from_abstract_class() {
+        assertMethodName("getVoid", AbstractClass.class, AbstractClass::getVoid);
+    }
 
-	@Test
-	void call_methods_with_no_parameter() {
-		assertMethodName("getVoid", Person.class, Person::getVoid);
+    @Test
+    void call_methods_with_no_parameter() {
+        assertMethodName("getVoid", Person.class, Person::getVoid);
 
-		assertMethodName("getName", Person.class, Person::getName);
-		assertMethodName("getInt", Person.class, Person::getInt);
-	}
+        assertMethodName("getName", Person.class, Person::getName);
+        assertMethodName("getInt", Person.class, Person::getInt);
+    }
 
-	@Test
-	void call_methods_with_no_parameter_from_interface() {
-		assertMethodName("getVoid", MyInterface.class, MyInterface::getVoid);
-	}
+    @Test
+    void call_methods_with_no_parameter_from_interface() {
+        assertMethodName("getVoid", MyInterface.class, MyInterface::getVoid);
+    }
 
-	@Test
-	void call_methods_with_one_parameter() {
-		assertMethodName("setNameWithReturn", Person.class, Person::setNameWithReturn);
-		assertMethodName("setName", Person.class, Person::setName);
-	}
+    @Test
+    void call_methods_with_one_parameter() {
+        assertMethodName("setNameWithReturn", Person.class, Person::setNameWithReturn);
+        assertMethodName("setName", Person.class, Person::setName);
+    }
 
-	@Test
-	void call_method_from_class_with_constructor_with_argument() {
-		assertMethodName("getVoid", WithConstructorArgument.class, WithConstructorArgument::getVoid);
-	}
+    @Test
+    void call_method_from_class_with_constructor_with_argument() {
+        assertMethodName("getVoid", WithConstructorArgument.class, WithConstructorArgument::getVoid);
+    }
 
 }

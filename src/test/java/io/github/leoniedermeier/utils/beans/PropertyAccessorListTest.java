@@ -9,40 +9,35 @@ import org.junit.jupiter.api.Test;
 
 class PropertyAccessorListTest {
 
-	@Test
-	void test() {
-		Parent parent = new Parent();
-		parent.setChilds(Collections.singletonList(new Child("1")));
-		// Exception fangen oder nicht?
-		assertThrows(IndexOutOfBoundsException.class,
-				() -> PropertyAccessor.get(parent, Parent::getChilds, l -> l.get(1)));
+    @Test
+    void test() {
+        Parent parent = new Parent();
+        parent.setChilds(Collections.singletonList(new Child("1")));
+        assertThrows(IndexOutOfBoundsException.class,
+                () -> PropertyAccessor.get(parent, Parent::getChilds, l -> l.get(1)));
 
-	}
+    }
 
-	private static class Parent {
-		private List<Child> childs;
+    private static class Parent {
+        private List<Child> childs;
 
-		public List<Child> getChilds() {
-			return childs;
-		}
+        public List<Child> getChilds() {
+            return this.childs;
+        }
 
-		public void setChilds(List<Child> childs) {
-			this.childs = childs;
-		}
-	}
+        public void setChilds(List<Child> childs) {
+            this.childs = childs;
+        }
+    }
 
-	private static class Child {
+    private static class Child {
 
-		private final String name;
+        private final String name;
 
-		public Child(String name) {
-			super();
-			this.name = name;
-		}
-
-		public String getName() {
-			return name;
-		}
-	}
+        public Child(String name) {
+            super();
+            this.name = name;
+        }
+    }
 
 }

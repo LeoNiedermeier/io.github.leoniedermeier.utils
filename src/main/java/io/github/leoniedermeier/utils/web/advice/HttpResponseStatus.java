@@ -26,14 +26,14 @@ import org.springframework.http.HttpStatus;
 
 /**
  * @see org.springframework.web.bind.annotation.ResponseStatus
- * 
- * Kann an einen Feld hängen (enum)
+ *
+ *      Kann an einen Feld hängen (enum)
  */
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface HttpResponseStatus {
 
-	HttpStatus value();
+    HttpStatus value();
 
 }

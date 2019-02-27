@@ -19,38 +19,38 @@ import io.github.leoniedermeier.utils.web.advice.TestRestController.MyErrorCodes
 
 class ExceptionHandlingTest {
 
-	private MockMvc mockMvc;
+    private MockMvc mockMvc;
 
-	@BeforeEach
-	public void init() {
-		mockMvc = MockMvcBuilders.standaloneSetup(new TestRestController())
-				.setControllerAdvice(new RestExceptionHandler()).build();
+    @BeforeEach
+    public void init() {
+        this.mockMvc = MockMvcBuilders.standaloneSetup(new TestRestController())
+                .setControllerAdvice(new RestExceptionHandler()).build();
 
-	}
+    }
 
-	@Test
-	public void text() throws Exception {
+    @Test
+    public void text() throws Exception {
 
-		mockMvc.perform(get("/text")).andExpect(status().isOk());
-	}
+        this.mockMvc.perform(get("/text")).andExpect(status().isOk());
+    }
 
-	@Test
-	public void exception() throws Exception {
+    @Test
+    public void exception() throws Exception {
 
-		mockMvc.perform(get("/exception").accept(MediaType.APPLICATION_JSON))
-				// .andDo(MockMvcResultHandlers.print())
-				.andExpect(status().is5xxServerError())
-				.andExpect(header().stringValues(HEADER_ERROR_CODES, MyErrorCodes.ERROR_CODE_SIMPLE.code()))
-				.andExpect(header().stringValues(HEADER_CID, iterableWithSize(1)));
-	}
+        this.mockMvc.perform(get("/exception").accept(MediaType.APPLICATION_JSON))
+                // .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().is5xxServerError())
+                .andExpect(header().stringValues(HEADER_ERROR_CODES, MyErrorCodes.ERROR_CODE_SIMPLE.code()))
+                .andExpect(header().stringValues(HEADER_CID, iterableWithSize(1)));
+    }
 
-	@Test
-	public void exception_with_status() throws Exception {
+    @Test
+    public void exception_with_status() throws Exception {
 
-		mockMvc.perform(get("/exception_with_status").accept(MediaType.APPLICATION_JSON))//
-				// .andDo(MockMvcResultHandlers.print())//
-				.andExpect(status().is(HttpStatus.NOT_FOUND.value()))//
-				.andExpect(headerErrorCode(MyErrorCodes.ERROR_CODE_WITH_HTTP_NOT_FOUND));
-	}
+        this.mockMvc.perform(get("/exception_with_status").accept(MediaType.APPLICATION_JSON))//
+                // .andDo(MockMvcResultHandlers.print())//
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))//
+                .andExpect(headerErrorCode(MyErrorCodes.ERROR_CODE_WITH_HTTP_NOT_FOUND));
+    }
 
 }

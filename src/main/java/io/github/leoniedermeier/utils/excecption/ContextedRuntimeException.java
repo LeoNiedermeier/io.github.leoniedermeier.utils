@@ -38,7 +38,7 @@ import java.util.List;
  * <p>
  * To use this class write code as follows:
  * </p>
- * 
+ *
  * <pre>
  *   try {
  *     ...
@@ -53,7 +53,7 @@ import java.util.List;
  * <p>
  * or improve diagnose data at a higher level:
  * </p>
- * 
+ *
  * <pre>
  *   try {
  *     ...
@@ -66,9 +66,9 @@ import java.util.List;
  * The output in a printStacktrace() (which often is written to a log) would
  * look something like the following:
  * </p>
- * 
+ *
  * <pre>
- * io.github.leoniedermeier.utils.excecption.ContextedRuntimeException: 
+ * io.github.leoniedermeier.utils.excecption.ContextedRuntimeException:
  *  ErrorCodes=CODE_1, CODE_2
  *  CID=C7BWD6
  *  ---------------------------------
@@ -84,56 +84,62 @@ import java.util.List;
  */
 
 public class ContextedRuntimeException extends RuntimeException
-		implements ExtendedExceptionContext<ContextedRuntimeException> {
+        implements ExtendedExceptionContext<ContextedRuntimeException> {
 
-	private static final long serialVersionUID = 6933021659100487064L;
+    @SuppressWarnings("squid:S4926")
+    private static final long serialVersionUID = 1667933980175471053L;
 
-	/** Where the data is stored. */
-	private final List<Entry> entries = new ArrayList<>();
+    /** Where the data is stored. */
+    private final List<Entry> entries = new ArrayList<>();
 
-	public ContextedRuntimeException(ErrorCode errorCode) {
-		super();
-		init(errorCode);
-	}
+    public ContextedRuntimeException(ErrorCode errorCode) {
+        super();
+        init(errorCode);
+    }
 
-	public ContextedRuntimeException(ErrorCode errorCode, final String message) {
-		super(message);
-		init(errorCode);
-	}
+    public ContextedRuntimeException(ErrorCode errorCode, final String message) {
+        super(message);
+        init(errorCode);
+    }
 
-	public ContextedRuntimeException(ErrorCode errorCode, final String message, final Throwable cause) {
-		super(message, cause);
-		init(errorCode);
-	}
+    public ContextedRuntimeException(ErrorCode errorCode, final String message, final Throwable cause) {
+        super(message, cause);
+        init(errorCode);
+    }
 
-	public ContextedRuntimeException(ErrorCode errorCode, final Throwable cause) {
-		super(cause);
-		init(errorCode);
-	}
+    public ContextedRuntimeException(ErrorCode errorCode, final Throwable cause) {
+        super(cause);
+        init(errorCode);
+    }
 
-	@Override
-	public List<Entry> getContextEntries() {
-		return this.entries;
-	}
+    @Override
+    public List<Entry> getContextEntries() {
+        return this.entries;
+    }
 
-	/**
-	 * Provides the message explaining the exception, including the contextual data.
-	 *
-	 * @see java.lang.Throwable#getMessage()
-	 * @return the message, never {@code null}.
-	 */
-	@Override
-	public String getMessage() {
-		return getFormattedExceptionMessage(super.getMessage());
-	}
+    /**
+     * Provides the message explaining the exception, including the contextual data.
+     *
+     * @see java.lang.Throwable#getMessage()
+     * @return the message, never {@code null}.
+     */
+    @Override
+    public String getMessage() {
+        return getFormattedExceptionMessage(super.getMessage());
+    }
 
-	/**
-	 * Provides the message explaining the exception without the contextual data.
-	 *
-	 * @see java.lang.Throwable#getMessage()
-	 * @return the message
-	 */
-	public String getRawMessage() {
-		return super.getMessage();
-	}
+    /**
+     * Provides the message explaining the exception without the contextual data.
+     *
+     * @see java.lang.Throwable#getMessage()
+     * @return the message
+     */
+    public String getRawMessage() {
+        return super.getMessage();
+    }
+
+    private void init(final ErrorCode errorCode) {
+        addContextValue(ErrorCode.class.getSimpleName(), errorCode);
+        addCID();
+    }
 }
