@@ -8,11 +8,8 @@ import java.util.function.BiPredicate;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsIterableContaining;
-
-import io.github.leoniedermeier.utils.excecption.ErrorCode;
 
 public class ErrorCodeMatchers {
 
@@ -41,32 +38,6 @@ public class ErrorCodeMatchers {
         protected boolean matchesSafely(T item) {
             return this.predicate.test(this.expected, item);
         }
-    }
-
-    static class ErrorCodeMatcher extends TypeSafeDiagnosingMatcher<ErrorCode> {
-        private final ErrorCode expected;
-
-        public ErrorCodeMatcher(ErrorCode expected) {
-            super(ErrorCode.class);
-            this.expected = expected;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText((" a ErrorCode ")).appendValue(this.expected);
-
-        }
-
-        @Override
-        protected boolean matchesSafely(ErrorCode item, Description mismatchDescription) {
-            if (this.expected.equalsTo(item)) {
-                return true;
-            } else {
-                mismatchDescription.appendText("available was: ").appendValue(item);
-                return false;
-            }
-        }
-
     }
 
     public static <X, T extends X> Matcher<T> equalTo(BiPredicate<X, X> predicate, T expected) {

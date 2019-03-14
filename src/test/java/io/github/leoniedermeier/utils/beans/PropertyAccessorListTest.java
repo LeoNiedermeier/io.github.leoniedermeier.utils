@@ -22,7 +22,7 @@ class PropertyAccessorListTest {
         private List<Child> childs;
 
         public List<Child> getChilds() {
-            return this.childs;
+            return childs;
         }
 
         public void setChilds(List<Child> childs) {

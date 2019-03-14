@@ -17,11 +17,11 @@ public class ErrorInformation {
     }
 
     public List<String> getErrroCodes() {
-        return this.errroCodes;
+        return errroCodes;
     }
 
     public HttpStatus getStatus() {
-        return this.status;
+        return status;
     }
 
     public void setErrroCodes(List<String> errroCodes) {
@@ -37,6 +37,6 @@ public class ErrorInformation {
     }
 
     public String getCid() {
-        return this.cid;
+        return cid;
     }
 }

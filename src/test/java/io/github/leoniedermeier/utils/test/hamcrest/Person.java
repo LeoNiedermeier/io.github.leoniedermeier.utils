@@ -13,15 +13,15 @@ class Person {
     }
 
     public void addPhone(Phone phone) {
-        this.phones.add(phone);
+        phones.add(phone);
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public List<Phone> getPhones() {
-        return this.phones;
+        return phones;
     }
 }
 
@@ -34,6 +34,6 @@ class Phone {
     }
 
     public String getNumber() {
-        return this.number;
+        return number;
     }
 }

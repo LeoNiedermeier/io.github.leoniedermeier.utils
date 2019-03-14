@@ -61,6 +61,14 @@ class ExceptionMatchersTest {
             }, throwsA(SQLException.class)
                     .with(property(SQLException::getSQLState, " sql-state ").is(equalTo("Expected-SQL-STATE")))));
         }
+
+        @Test
+        void proper_exception_thrown_AND_MATCH_in_property() {
+            assertThat(() -> {
+                throw new SQLException("Reason", "SQL-STATE");
+            }, throwsA(SQLException.class)
+                    .with(property(SQLException::getSQLState, " sql-state ").is(equalTo("SQL-STATE"))));
+        }
     }
 
     private static Executable doThrow(Exception e) {

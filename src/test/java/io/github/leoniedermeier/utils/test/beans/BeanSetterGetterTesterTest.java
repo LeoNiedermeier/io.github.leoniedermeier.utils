@@ -29,7 +29,7 @@ public class BeanSetterGetterTesterTest {
         }
 
         public int getSomeInt() {
-            return this.someInt;
+            return someInt;
         }
 
         public void setName(String name) {
@@ -37,7 +37,7 @@ public class BeanSetterGetterTesterTest {
         }
 
         public String getName() {
-            return this.name;
+            return name;
         }
 
     }

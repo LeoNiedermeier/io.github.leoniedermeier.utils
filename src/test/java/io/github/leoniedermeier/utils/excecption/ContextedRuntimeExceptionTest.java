@@ -1,6 +1,6 @@
 package io.github.leoniedermeier.utils.excecption;
 
-import static io.github.leoniedermeier.utils.test.exception.ContextedRuntimeExceptionAssertions.assertThrowsContextedRuntimeException;
+import static io.github.leoniedermeier.utils.test.exception.ContextedRuntimeExceptionAssertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -33,7 +33,8 @@ class ContextedRuntimeExceptionTest {
     void exceptionTesting2() {
         // same as exceptionTesting() but with custom assert method.
         ThrowsException throwsException = new ThrowsException();
-        assertThrowsContextedRuntimeException(MyErrorCodes.CODE_1, () -> throwsException.doSomething());
+        ContextedRuntimeException exception = assertThrowsContextedRuntimeException(MyErrorCodes.CODE_1, () -> throwsException.doSomething());
+        assertExceptionHasErrorCode(MyErrorCodes.CODE_1, exception);
     }
 
 }

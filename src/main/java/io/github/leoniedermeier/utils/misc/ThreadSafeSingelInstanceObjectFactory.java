@@ -15,13 +15,13 @@ public class ThreadSafeSingelInstanceObjectFactory {
     @SuppressWarnings("unchecked")
     public <T> T getInstance(Supplier<T> s) {
         // Type parameter T defined here makes usage easier.
-        if (this.instance == null) {
+        if (instance == null) {
             synchronized (this) {
-                if (this.instance == null) {
-                    this.instance = s.get();
+                if (instance == null) {
+                    instance = s.get();
                 }
             }
         }
-        return (T) this.instance;
+        return (T) instance;
     }
 }

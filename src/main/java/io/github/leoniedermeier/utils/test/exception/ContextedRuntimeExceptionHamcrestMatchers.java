@@ -12,7 +12,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import io.github.leoniedermeier.utils.excecption.ContextedRuntimeException;
 import io.github.leoniedermeier.utils.excecption.ErrorCode;
 
-public class ContextedRuntimeExceptionMatchers {
+public class ContextedRuntimeExceptionHamcrestMatchers {
 
     private static class ContextedRuntimeExceptionErrorCodeMatcher
             extends TypeSafeDiagnosingMatcher<ContextedRuntimeException> {
@@ -26,13 +26,13 @@ public class ContextedRuntimeExceptionMatchers {
         @Override
         public void describeTo(Description description) {
             description.appendText((" a ContextedRuntimeException containing error codes ")).appendValueList("[", ", ",
-                    "]", this.expected);
+                    "]", expected);
         }
 
         @Override
         protected boolean matchesSafely(ContextedRuntimeException exception, Description mismatchDescription) {
 
-            List<ErrorCode> mismatches = Stream.of(this.expected)
+            List<ErrorCode> mismatches = Stream.of(expected)
                     .filter(ec -> exception.getErrorCodes().noneMatch(ec::equalsTo)).collect(toList());
 
             if (mismatches.isEmpty()) {
@@ -53,7 +53,7 @@ public class ContextedRuntimeExceptionMatchers {
         return new ContextedRuntimeExceptionErrorCodeMatcher(expected);
     }
 
-    private ContextedRuntimeExceptionMatchers() {
-        throw new AssertionError("No ContextedRuntimeExceptionMatchers instances for you!");
+    private ContextedRuntimeExceptionHamcrestMatchers() {
+        throw new AssertionError("No ContextedRuntimeExceptionHamcrestMatchers instances for you!");
     }
 }

@@ -63,8 +63,8 @@ public interface ExceptionContext<T extends ExceptionContext<T>> {
 
         private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException {
             s.defaultReadObject();
-            this.label = (String) s.readObject();
-            this.value = s.readObject();
+            label = (String) s.readObject();
+            value = s.readObject();
         }
 
         private void writeObject(java.io.ObjectOutputStream s) throws IOException {

@@ -23,7 +23,7 @@ class ExceptionHandlingTest {
 
     @BeforeEach
     public void init() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new TestRestController())
+        mockMvc = MockMvcBuilders.standaloneSetup(new TestRestController())
                 .setControllerAdvice(new RestExceptionHandler()).build();
 
     }
@@ -31,13 +31,13 @@ class ExceptionHandlingTest {
     @Test
     public void text() throws Exception {
 
-        this.mockMvc.perform(get("/text")).andExpect(status().isOk());
+        mockMvc.perform(get("/text")).andExpect(status().isOk());
     }
 
     @Test
     public void exception() throws Exception {
 
-        this.mockMvc.perform(get("/exception").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/exception").accept(MediaType.APPLICATION_JSON))
                 // .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().is5xxServerError())
                 .andExpect(header().stringValues(HEADER_ERROR_CODES, MyErrorCodes.ERROR_CODE_SIMPLE.code()))
@@ -47,7 +47,7 @@ class ExceptionHandlingTest {
     @Test
     public void exception_with_status() throws Exception {
 
-        this.mockMvc.perform(get("/exception_with_status").accept(MediaType.APPLICATION_JSON))//
+        mockMvc.perform(get("/exception_with_status").accept(MediaType.APPLICATION_JSON))//
                 // .andDo(MockMvcResultHandlers.print())//
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))//
                 .andExpect(headerErrorCode(MyErrorCodes.ERROR_CODE_WITH_HTTP_NOT_FOUND));

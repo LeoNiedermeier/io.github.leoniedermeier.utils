@@ -114,7 +114,7 @@ public class ContextedRuntimeException extends RuntimeException
 
     @Override
     public List<Entry> getContextEntries() {
-        return this.entries;
+        return entries;
     }
 
     /**

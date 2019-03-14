@@ -4,6 +4,7 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 
 /**
  * <h1>NOTE (from javadoc):</h1> An {@code Error} is a subclass of
@@ -62,13 +63,21 @@ public final class ExceptionMatchers {
 
         public Matcher<Executable> with(Matcher<? super T> matcher) {
             return PropertyAccess.<Executable, Exception>property(ExecutableThrowsMatcher::execute, "throws a ")
-                    .is(Is.createFrom(this.exceptionOfType, this.expected::cast, " and").is(matcher));
+                    .is(Matchers.allOf(this.exceptionOfType,
+                            PropertyAccess.property(this.expected::cast, " with ").is(matcher)));
         }
 
     }
 
-    public static <T extends Exception> ExecutableThrowsMatcher<T> throwsA(Class<T> expected) {
-        return new ExecutableThrowsMatcher<>(expected, isExceptionOfType(expected));
+    /**
+     * <em>Asserts</em> that execution of the {@link Executable} throws
+     * an exception of the {@code expectedType}.
+     *
+     * <p>If no exception is thrown, or if an exception of a different type is
+     * thrown, this method will fail.
+     */
+    public static <T extends Exception> ExecutableThrowsMatcher<T> throwsA(Class<T> expectedType) {
+        return new ExecutableThrowsMatcher<>(expectedType, isExceptionOfType(expectedType));
     }
 
     public static <T extends Exception> Matcher<Executable> throwsA(Class<T> expected, Matcher<? super T> matcher) {
@@ -83,7 +92,8 @@ public final class ExceptionMatchers {
 
             @Override
             public void describeMismatch(Object item, Description description) {
-                description.appendText(this.mismatch);
+                // attention: item is of type Executable
+                description.appendText(mismatch);
             }
 
             @Override
@@ -92,9 +102,9 @@ public final class ExceptionMatchers {
                     return true;
                 }
                 if (actual == null) {
-                    this.mismatch = "nothing";
+                    mismatch = "nothing";
                 } else {
-                    this.mismatch = String.format("<%s> is not an exception of type <%s>", actual.getClass(), expected);
+                    mismatch = String.format("<%s> is not an exception of type <%s>", actual.getClass(), expected);
                 }
                 return false;
             }

@@ -21,7 +21,7 @@ class PropertyAccessorTest {
         String street;
 
         public String getStreet() {
-            return this.street;
+            return street;
         }
     }
 
@@ -29,7 +29,7 @@ class PropertyAccessorTest {
         Address address;
 
         public Address getAddress() {
-            return this.address;
+            return address;
         }
     }
 

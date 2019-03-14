@@ -28,7 +28,7 @@ class GenericBeanPropertyTesterTest {
         }
 
         public int getNumber() {
-            return this.number;
+            return number;
         }
 
         public void setName(String name) {
@@ -36,7 +36,7 @@ class GenericBeanPropertyTesterTest {
         }
 
         public String getName() {
-            return this.name;
+            return name;
         }
 
     }

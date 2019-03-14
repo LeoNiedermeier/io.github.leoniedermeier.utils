@@ -10,7 +10,7 @@ public class ThreadSafeSingelInstanceObjectFactoryTest {
     private final ThreadSafeSingelInstanceObjectFactory objectFactory = new ThreadSafeSingelInstanceObjectFactory();
 
     private MyBean getInstance() {
-        return this.objectFactory.getInstance(() -> new MyBean());
+        return objectFactory.getInstance(() -> new MyBean());
     }
 
     @Test

@@ -32,8 +32,8 @@ public final class SpringAopProxyTargetMethodDetector {
 
         @Override
         public Object invoke(MethodInvocation invocation) throws Throwable {
-            this.method = invocation.getMethod();
-            return DEFAULT_VALUES.get(this.method.getReturnType());
+            method = invocation.getMethod();
+            return DEFAULT_VALUES.get(method.getReturnType());
         }
     }
 
