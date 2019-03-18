@@ -31,7 +31,7 @@ public class RestExceptionHandler {
         // If the ErrorCode is an enum field, check whether it is annotated with
         // HttpResponseStatus.
         errorInformation.setStatus(exception.findLastErrorCode().filter(ec -> ec.getClass().isEnum())
-                // (enum) field with same name as code() returns
+                // (enum) field with same id as code() returns
                 .map(ec -> findField(ec.getClass(), ec.code(), ec.getClass()))
                 .map(field -> field.getAnnotation(HttpResponseStatus.class))//
                 .map(HttpResponseStatus::value).orElse(HttpStatus.INTERNAL_SERVER_ERROR));

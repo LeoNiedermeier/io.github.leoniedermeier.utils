@@ -66,11 +66,11 @@ public class SerializedLambdaTargetMethodDetector {
                 .filter(method -> Objects.equals(method.getName(), implMethodName)).collect(Collectors.toList());
 
         if (candidates.size() > 1) {
-            throw new IllegalStateException("Multiple methods with name '" + implMethodName + "' found in class '"
+            throw new IllegalStateException("Multiple methods with id '" + implMethodName + "' found in class '"
                     + lambdaImplClass + "'. Currently no overload resolution.");
         } else if (candidates.isEmpty()) {
             throw new IllegalStateException(
-                    "No method with name '" + implMethodName + "' found in class '" + lambdaImplClass + "'.");
+                    "No method with id '" + implMethodName + "' found in class '" + lambdaImplClass + "'.");
         } else {
             return candidates.get(0);
         }

@@ -17,6 +17,12 @@ class GenericBeanPropertyTesterTest {
         assertThrows(MultipleFailuresError.class,
                 () -> GenericBeanPropertyTester.testAllSettersGetters(MyErrorBean.class));
     }
+    
+    @Test
+    void wrong_property_twhrows_exception() {
+        assertThrows(MultipleFailuresError.class,
+                () -> GenericBeanPropertyTester.testAllSettersGetters(MyErrorBean.class));
+    }
 
     public static class MyBean {
         private String name;

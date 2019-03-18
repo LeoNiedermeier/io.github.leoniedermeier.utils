@@ -8,7 +8,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -46,13 +45,13 @@ class ExceptionContextTest {
             TestExceptionContext context = new TestExceptionContext();
             assertFalse(context.findLastContextValue("myLabel").isPresent());
         }
-        
+
         @Test
-        void  multiple_values() {
+        void multiple_values() {
             TestExceptionContext context = new TestExceptionContext();
             context.addContextValue("myLabel", "1");
             context.addContextValue("myLabel", "2");
-            assertEquals("2",context.findLastContextValue("myLabel").get());
+            assertEquals("2", context.findLastContextValue("myLabel").get());
         }
     }
 
@@ -60,7 +59,7 @@ class ExceptionContextTest {
     @DisplayName("Method: getContextLabels()")
     class GetContextLabels {
         @Test
-        void  multiple_values() {
+        void multiple_values() {
             TestExceptionContext context = new TestExceptionContext();
             context.addContextValue("myLabel-1", "1");
             context.addContextValue("myLabel-2", "2");
@@ -69,8 +68,9 @@ class ExceptionContextTest {
             assertTrue(result.contains("myLabel-1"));
             assertTrue(result.contains("myLabel-2"));
         }
-        
+
     }
+
     @Nested
     @DisplayName("Serialization of Entry")
     class EntrySerialization {
@@ -135,8 +135,7 @@ class ExceptionContextTest {
             Object value = new Object();
             exceptionContext.addContextValue("label", value);
 
-            assertThat(exceptionContext.findFirstContextValue("label"),
-                    isPresentAndIs(value));
+            assertThat(exceptionContext.findFirstContextValue("label"), isPresentAndIs(value));
             assertSame(value, exceptionContext.findFirstContextValue("label").get());
         }
 
@@ -146,8 +145,7 @@ class ExceptionContextTest {
             exceptionContext.addContextValue("label", value);
             exceptionContext.addContextValue("label", "2");
 
-            assertThat(exceptionContext.findFirstContextValue("label"),
-                    isPresentAndIs(value));
+            assertThat(exceptionContext.findFirstContextValue("label"), isPresentAndIs(value));
             assertSame(value, exceptionContext.findFirstContextValue("label").get());
         }
 

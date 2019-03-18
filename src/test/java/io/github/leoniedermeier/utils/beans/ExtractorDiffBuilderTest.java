@@ -29,7 +29,7 @@ class ExtractorDiffBuilderTest {
         TestClass lhs = new TestClass("Hans");
         TestClass rhs = new TestClass("Sepp");
         DiffResult diffResult = new ExtractorDiffBuilder<>(lhs, rhs, ToStringStyle.JSON_STYLE)
-                .append("name", TestClass::getName).build();
+                .append("id", TestClass::getName).build();
         assertThat(diffResult.getDiffs(), iterableWithSize(1));
         Diff<?> diff = diffResult.getDiffs().get(0);
         assertThat(lhs.name, equalTo(diff.getLeft()));

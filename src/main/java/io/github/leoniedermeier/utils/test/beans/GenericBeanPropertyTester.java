@@ -37,7 +37,8 @@ public final class GenericBeanPropertyTester {
 
                 Object outputValue = invoke(propertyDescriptor.getReadMethod(), bean);
 
-                Supplier<String> message = () -> "\nproperty: " + propertyDescriptor.getName() //
+                Supplier<String> message = () -> "-----------------\n" //
+                        + "property: " + propertyDescriptor.getName() //
                         + "\nset-method: " + propertyDescriptor.getWriteMethod().getName() //
                         + "\nget-method: " + propertyDescriptor.getReadMethod().getName() + "\n";
 
