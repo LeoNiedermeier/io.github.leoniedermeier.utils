@@ -1,11 +1,8 @@
 package io.github.leoniedermeier.utils.excecption;
 
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresent;
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresentAndIs;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -135,7 +132,7 @@ class ExceptionContextTest {
             Object value = new Object();
             exceptionContext.addContextValue("label", value);
 
-            assertThat(exceptionContext.findFirstContextValue("label"), isPresentAndIs(value));
+            assertTrue(exceptionContext.findFirstContextValue("label").isPresent());
             assertSame(value, exceptionContext.findFirstContextValue("label").get());
         }
 
@@ -145,20 +142,20 @@ class ExceptionContextTest {
             exceptionContext.addContextValue("label", value);
             exceptionContext.addContextValue("label", "2");
 
-            assertThat(exceptionContext.findFirstContextValue("label"), isPresentAndIs(value));
+            assertFalse(exceptionContext.findFirstContextValue("label").isPresent());
             assertSame(value, exceptionContext.findFirstContextValue("label").get());
         }
 
         @Test
         void no_value_exists() {
-            assertThat(exceptionContext.findFirstContextValue("label"), not(isPresent()));
+            assertFalse(exceptionContext.findFirstContextValue("label").isPresent());
 
             assertFalse(exceptionContext.findFirstContextValue("label").isPresent());
         }
 
         @Test
         void value_is_null() {
-            assertThat(exceptionContext.findFirstContextValue("label"), not(isPresent()));
+            assertFalse(exceptionContext.findFirstContextValue("label").isPresent());
             assertFalse(exceptionContext.findFirstContextValue(null).isPresent());
         }
     }

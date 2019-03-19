@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.github.leoniedermeier.utils.mapstruct.MappingContext;
 import io.github.leoniedermeier.utils.mapstruct.example.DTOs.UniversityDTO;
 import io.github.leoniedermeier.utils.mapstruct.example.MappersWithMappingContext.UniversityMapper;
@@ -42,9 +40,5 @@ class MappersWithMappingContextTest {
         assertNotNull(result.getStudents().get(0));
         assertSame(result.getStudents().get(0), result.getDepartments().get(0).getStudents().get(0));
 
-        ObjectMapper mapper = new ObjectMapper();
-        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(universityDTO));
-        System.out.println("######################");
-        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
     }
 }
