@@ -14,22 +14,6 @@ import io.github.leoniedermeier.utils.excecption.ErrorCode;
 public final class ContextedRuntimeExceptionAssertions {
 
     /**
-     * Custom assert method checking for {@link ContextedRuntimeException} and
-     * {@link ErrorCode}.
-     * 
-     * @param expectedErrorCode The expected {@link ErrorCode}.
-     * @param executable        The {@link Executable}.
-     * @return The thrown {@link ContextedRuntimeException}.
-     * @see org.junit.jupiter.api.Assertions#assertThrows
-     */
-    public static ContextedRuntimeException assertThrowsContextedRuntimeException(ErrorCode expectedErrorCode,
-            Executable executable) {
-        ContextedRuntimeException exception = assertThrows(ContextedRuntimeException.class, executable);
-        assertExceptionHasErrorCode(expectedErrorCode, exception);
-        return exception;
-    }
-
-    /**
      * Custom assert method checking whether the given
      * {@link ContextedRuntimeException} has the given {@link ErrorCode}.
      * 
@@ -43,6 +27,22 @@ public final class ContextedRuntimeExceptionAssertions {
             throw new AssertionFailedError("Exception does not contain errorcode " + expectedErrorCode.code()
                     + "\navailable error codes: " + codes, expectedErrorCode.code(), codes);
         }
+    }
+
+    /**
+     * Custom assert method checking for {@link ContextedRuntimeException} and
+     * {@link ErrorCode}.
+     * 
+     * @param expectedErrorCode The expected {@link ErrorCode}.
+     * @param executable        The {@link Executable}.
+     * @return The thrown {@link ContextedRuntimeException}.
+     * @see org.junit.jupiter.api.Assertions#assertThrows
+     */
+    public static ContextedRuntimeException assertThrowsContextedRuntimeException(ErrorCode expectedErrorCode,
+            Executable executable) {
+        ContextedRuntimeException exception = assertThrows(ContextedRuntimeException.class, executable);
+        assertExceptionHasErrorCode(expectedErrorCode, exception);
+        return exception;
     }
 
     private ContextedRuntimeExceptionAssertions() {

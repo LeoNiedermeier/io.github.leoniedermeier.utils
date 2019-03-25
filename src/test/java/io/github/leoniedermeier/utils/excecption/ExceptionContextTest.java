@@ -142,7 +142,7 @@ class ExceptionContextTest {
             exceptionContext.addContextValue("label", value);
             exceptionContext.addContextValue("label", "2");
 
-            assertFalse(exceptionContext.findFirstContextValue("label").isPresent());
+            assertTrue(exceptionContext.findFirstContextValue("label").isPresent());
             assertSame(value, exceptionContext.findFirstContextValue("label").get());
         }
 

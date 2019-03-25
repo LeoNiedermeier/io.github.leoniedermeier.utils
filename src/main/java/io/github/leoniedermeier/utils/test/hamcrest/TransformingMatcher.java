@@ -14,8 +14,8 @@ import org.hamcrest.Matcher;
  * @param <R> The type of the transformed value.
  */
 public class TransformingMatcher<T, R> extends BaseMatcher<T> {
-    private String text;
     private Matcher<? super R> matcherForTransformedValue;
+    private String text;
     private Function<T, R> transformer;
 
     /**
@@ -35,12 +35,6 @@ public class TransformingMatcher<T, R> extends BaseMatcher<T> {
     }
 
     @Override
-    public void describeTo(Description description) {
-        description.appendText(this.text);
-        this.matcherForTransformedValue.describeTo(description);
-    }
-
-    @Override
     public void describeMismatch(Object item, Description description) {
         try {
             // check for type
@@ -51,6 +45,12 @@ public class TransformingMatcher<T, R> extends BaseMatcher<T> {
             description.appendText("wrong type: ").appendText(item.getClass().getName()).appendText(" (").appendValue(item)
                     .appendText(")");
         }
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText(this.text);
+        this.matcherForTransformedValue.describeTo(description);
     }
 
     @Override

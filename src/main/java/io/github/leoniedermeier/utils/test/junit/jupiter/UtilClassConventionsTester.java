@@ -32,14 +32,14 @@ public interface UtilClassConventionsTester<UTIL_CLASS> {
     }
 
     @Test
-    default void isPublicClass() {
-        Class<?> clazz = getClassUnderTest();
-        assertTrue(Modifier.isPublic(clazz.getModifiers()), "Class " + clazz + " is not public.");
-    }
-
-    @Test
     default void isFinalClass() {
         Class<?> clazz = getClassUnderTest();
         assertTrue(Modifier.isFinal(clazz.getModifiers()), "Class " + clazz + " is not final.");
+    }
+
+    @Test
+    default void isPublicClass() {
+        Class<?> clazz = getClassUnderTest();
+        assertTrue(Modifier.isPublic(clazz.getModifiers()), "Class " + clazz + " is not public.");
     }
 }

@@ -100,6 +100,53 @@ public interface ExceptionContext<T extends ExceptionContext<T>> {
     }
 
     /**
+     * Retrieves the first available contextual data value associated with the
+     * label.
+     *
+     * @param label The label to get the contextual value for, may be {@code null}
+     * @return The first contextual value associated with the label.
+     */
+    default Optional<Object> findFirstContextValue(final String label) {
+        return findFirstContextValue(label, Object.class);
+    }
+
+    /**
+     * Retrieves the first available contextual data value associated with the label
+     * and which are instances of the given class.
+     *
+     * @param label         The label to get the contextual value for, may be
+     *                      {@code null}
+     * @param requiredClass The required class of the values.
+     * @return The first contextual value associated with the label and class.
+     */
+    default <R> Optional<R> findFirstContextValue(final String label, Class<R> requiredClass) {
+        return getContextValues(label, requiredClass).findFirst();
+    }
+
+    /**
+     * Retrieves the last available contextual data value associated with the label.
+     *
+     * @param label The label to get the contextual value for, may be {@code null}
+     * @return The first contextual value associated with the label.
+     */
+    default Optional<Object> findLastContextValue(final String label) {
+        return getContextValues(label, Object.class).reduce((first, second) -> second);
+    }
+
+    /**
+     * Retrieves the last available contextual data value associated with the label
+     * and which are instances of the given class.
+     *
+     * @param label         The label to get the contextual value for, may be
+     *                      {@code null}
+     * @param requiredClass The required class of the values.
+     * @return the first contextual value associated with the label and class.
+     */
+    default <R> Optional<R> findLastContextValue(final String label, Class<R> requiredClass) {
+        return getContextValues(label, requiredClass).reduce((first, second) -> second);
+    }
+
+    /**
      * Retrieves the full list of {@link Entry}s defined in the contextual data.
      *
      * @return The list of {@link Entry}s, not {@code null}
@@ -139,30 +186,6 @@ public interface ExceptionContext<T extends ExceptionContext<T>> {
         return getContextEntries().stream().filter(e -> Objects.equals(label, e.getLabel())).map(Entry::getValue)
                 .filter(requiredClass::isInstance).map(requiredClass::cast);
 
-    }
-
-    /**
-     * Retrieves the first available contextual data value associated with the
-     * label.
-     *
-     * @param label The label to get the contextual value for, may be {@code null}
-     * @return The first contextual value associated with the label.
-     */
-    default Optional<Object> findFirstContextValue(final String label) {
-        return findFirstContextValue(label, Object.class);
-    }
-
-    /**
-     * Retrieves the first available contextual data value associated with the label
-     * and which are instances of the given class.
-     *
-     * @param label         The label to get the contextual value for, may be
-     *                      {@code null}
-     * @param requiredClass The required class of the values.
-     * @return The first contextual value associated with the label and class.
-     */
-    default <R> Optional<R> findFirstContextValue(final String label, Class<R> requiredClass) {
-        return getContextValues(label, requiredClass).findFirst();
     }
 
     /**
@@ -214,29 +237,6 @@ public interface ExceptionContext<T extends ExceptionContext<T>> {
         buffer.append('\n');
         buffer.append(getFormattedExceptionMessage());
         return buffer.toString();
-    }
-
-    /**
-     * Retrieves the last available contextual data value associated with the label.
-     *
-     * @param label The label to get the contextual value for, may be {@code null}
-     * @return The first contextual value associated with the label.
-     */
-    default Optional<Object> findLastContextValue(final String label) {
-        return getContextValues(label, Object.class).reduce((first, second) -> second);
-    }
-
-    /**
-     * Retrieves the last available contextual data value associated with the label
-     * and which are instances of the given class.
-     *
-     * @param label         The label to get the contextual value for, may be
-     *                      {@code null}
-     * @param requiredClass The required class of the values.
-     * @return the first contextual value associated with the label and class.
-     */
-    default <R> Optional<R> findLastContextValue(final String label, Class<R> requiredClass) {
-        return getContextValues(label, requiredClass).reduce((first, second) -> second);
     }
 
 }

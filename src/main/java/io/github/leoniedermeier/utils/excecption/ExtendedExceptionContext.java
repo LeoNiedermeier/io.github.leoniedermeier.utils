@@ -48,6 +48,16 @@ public interface ExtendedExceptionContext<T extends ExtendedExceptionContext<T>>
     }
 
     /**
+     * Adds the {@link ErrorCode} and a correlation id.
+     * 
+     * @param errorCode The {@link ErrorCode} to add.
+     */
+    default void addErrorCodeAndCID(final ErrorCode errorCode) {
+        addContextValue(ErrorCode.class.getSimpleName(), errorCode);
+        addCID();
+    }
+
+    /**
      * Retrieves the first added {@link ErrorCode}.
      * 
      * @return The last added {@link ErrorCode}.
@@ -94,15 +104,5 @@ public interface ExtendedExceptionContext<T extends ExtendedExceptionContext<T>>
         buffer.append("\n---------------------------------\n");
         buffer.append(ExceptionContext.super.getFormattedExceptionMessage());
         return buffer.toString();
-    }
-
-    /**
-     * Adds the {@link ErrorCode} and a correlation id.
-     * 
-     * @param errorCode The {@link ErrorCode} to add.
-     */
-    default void addErrorCodeAndCID(final ErrorCode errorCode) {
-        addContextValue(ErrorCode.class.getSimpleName(), errorCode);
-        addCID();
     }
 }

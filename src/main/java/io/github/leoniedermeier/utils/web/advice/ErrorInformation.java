@@ -6,14 +6,18 @@ import org.springframework.http.HttpStatus;
 
 public class ErrorInformation {
 
-    private HttpStatus status;
+    private String cid;
     private List<String> errroCodes;
 
-    private String cid;
+    private HttpStatus status;
 
     public ErrorInformation() {
         super();
 
+    }
+
+    public String getCid() {
+        return cid;
     }
 
     public List<String> getErrroCodes() {
@@ -24,19 +28,15 @@ public class ErrorInformation {
         return status;
     }
 
+    public void setCid(String cid) {
+        this.cid = cid;
+    }
+
     public void setErrroCodes(List<String> errroCodes) {
         this.errroCodes = errroCodes;
     }
 
     public void setStatus(HttpStatus status) {
         this.status = status;
-    }
-
-    public void setCid(String cid) {
-        this.cid = cid;
-    }
-
-    public String getCid() {
-        return cid;
     }
 }
