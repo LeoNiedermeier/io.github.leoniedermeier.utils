@@ -5,6 +5,8 @@ import static org.hamcrest.core.AllOf.allOf;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -46,11 +48,9 @@ public class ErrorCodeMatchers {
 
     @SafeVarargs
     public static <X, T extends X> Matcher<Iterable<T>> hasItems(BiPredicate<X, X> predicate, T... items) {
-        List<Matcher<? super Iterable<T>>> all = new ArrayList<>(items.length);
-        for (T item : items) {
-            all.add(new IsIterableContaining<>(PredicateMatcher.of(predicate, item)));
-        }
-
+        List<Matcher<? super Iterable<T>>> all = Stream.of(items)
+                .map(item -> new IsIterableContaining<>(PredicateMatcher.of(predicate, item)))
+                .collect(Collectors.toList());
         return allOf(all);
     }
 

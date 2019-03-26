@@ -16,7 +16,7 @@ public class TreeIteratorUtils {
         protected final Function<T, ? extends Iterable<T>> childrenSupplier;
         protected final LinkedList<T> intermediate = new LinkedList<>();
 
-        public AbstractTreeIterator(final T root, Function<T, ? extends Iterable<T>> childrenSupplier) {
+        public AbstractTreeIterator(T root, Function<T, ? extends Iterable<T>> childrenSupplier) {
             this.childrenSupplier = childrenSupplier;
             this.intermediate.add(root);
         }
@@ -25,8 +25,8 @@ public class TreeIteratorUtils {
         public boolean hasNext() {
             return !intermediate.isEmpty();
         }
-
     }
+
     private static class BreathFirstTreeIterator<T> extends AbstractTreeIterator<T> {
 
         public BreathFirstTreeIterator(final T root, Function<T, ? extends Iterable<T>> childrenSupplier) {

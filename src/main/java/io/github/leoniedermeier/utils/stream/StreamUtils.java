@@ -49,15 +49,23 @@ public class StreamUtils {
         };
     }
 
+    /** 
+     * Experimental
+     */
     public static <T> Stream<T> flattenedTreeForIterableChildren(T element, Function<T, Iterable<T>> childrenSupplier) {
         return flattenedTreeForStreamChildren(element, childrenSupplier.andThen(StreamUtils::stream));
     }
 
+    /** 
+     * Experimental
+     */
     public static <T> Stream<T> flattenedTreeForIterableChildrenAlternative(T element,
             Function<T, Iterable<T>> childrenSupplier) {
         return flattenedTreeForStreamChildrenAlternative(element, childrenSupplier.andThen(StreamUtils::stream));
     }
-
+    /** 
+     * Experimental
+     */
     public static <T> Stream<T> flattenedTreeForStreamChildren(T element, Function<T, Stream<T>> childrenSupplier) {
         // Depth-first Pre-order (NLR)
         // Attention: each element is wrapped in a Stream of a single element. Can be
@@ -66,6 +74,9 @@ public class StreamUtils {
                 .orElse(Stream.empty()).flatMap(t -> flattenedTreeForStreamChildren(t, childrenSupplier)));
     }
 
+    /** 
+     * Experimental
+     */
     public static <T> Stream<T> flattenedTreeForStreamChildrenAlternative(T element,
             Function<T, Stream<T>> childrenSupplier) {
         // Order is (parent, children of parent, children of child 1, children of child
