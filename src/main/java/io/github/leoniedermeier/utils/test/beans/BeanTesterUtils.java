@@ -16,13 +16,21 @@ final class BeanTesterUtils {
 
     static {
         SUPPLIERS.put(Integer.TYPE, () -> Integer.valueOf(RANDOM.nextInt()));
+        SUPPLIERS.put(Integer.class, () -> Integer.valueOf(RANDOM.nextInt()));
         SUPPLIERS.put(Long.TYPE, () -> Long.valueOf(RANDOM.nextLong()));
+        SUPPLIERS.put(Long.class, () -> Long.valueOf(RANDOM.nextLong()));
         SUPPLIERS.put(Boolean.TYPE, () -> Boolean.valueOf(RANDOM.nextBoolean()));
+        SUPPLIERS.put(Boolean.class, () -> Boolean.valueOf(RANDOM.nextBoolean()));
         SUPPLIERS.put(Double.TYPE, () -> Double.valueOf(RANDOM.nextDouble()));
+        SUPPLIERS.put(Double.class, () -> Double.valueOf(RANDOM.nextDouble()));
         SUPPLIERS.put(Float.TYPE, () -> Float.valueOf(RANDOM.nextFloat()));
+        SUPPLIERS.put(Float.class, () -> Float.valueOf(RANDOM.nextFloat()));
         SUPPLIERS.put(Byte.TYPE, () -> Byte.valueOf((byte) RANDOM.nextInt(Byte.MAX_VALUE)));
+        SUPPLIERS.put(Byte.class, () -> Byte.valueOf((byte) RANDOM.nextInt(Byte.MAX_VALUE)));
         SUPPLIERS.put(Short.TYPE, () -> Short.valueOf((short) RANDOM.nextInt(Short.MAX_VALUE)));
+        SUPPLIERS.put(Short.class, () -> Short.valueOf((short) RANDOM.nextInt(Short.MAX_VALUE)));
         SUPPLIERS.put(Character.TYPE, () -> Character.valueOf((char) (RANDOM.nextInt('z' - 'a') + 'a')));
+        SUPPLIERS.put(Character.class, () -> Character.valueOf((char) (RANDOM.nextInt('z' - 'a') + 'a')));
         SUPPLIERS.put(String.class, () -> UUID.randomUUID().toString());
     }
 

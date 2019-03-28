@@ -16,6 +16,7 @@ class GenericBeanPropertyTesterTest {
     void wrong_property_throws_exception() {
         assertThrows(MultipleFailuresError.class,
                 () -> GenericBeanPropertyTester.testAllSettersGetters(MyErrorBean.class));
+        GenericBeanPropertyTester.testAllSettersGetters(MyErrorBean.class);
     }
     
     @Test
@@ -36,6 +37,17 @@ class GenericBeanPropertyTesterTest {
         public int getNumber() {
             return number;
         }
+        
+        private Long wrapperNumber;
+
+        public void setWrapperNumber(Long wrapperNumber) {
+            this.wrapperNumber = wrapperNumber;
+        }
+        
+        public Long getWrapperNumber() {
+            return wrapperNumber;
+        }
+         
 
         public void setName(String name) {
             this.name = name;

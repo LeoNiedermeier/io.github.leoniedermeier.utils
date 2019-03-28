@@ -1,5 +1,6 @@
 package io.github.leoniedermeier.utils.test.beans;
 
+import static io.github.leoniedermeier.utils.test.beans.BeanTesterUtils.newInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -11,6 +12,27 @@ import java.util.function.Supplier;
 import io.github.leoniedermeier.utils.methodreference.ByteBuddyTargetMethodDetector;
 
 public class BeanSetterGetterTester {
+    
+    public static <B, T> void assertSetterGetter(Class<B> beanClass, T inputValue, BiConsumer<B, T> setter,
+            Function<B, T> getter) {
+        B bean = newInstance(beanClass);
+
+        setter.accept(bean, inputValue);
+
+        T outputValue = getter.apply(bean);
+        Supplier<String> message = () -> {
+            Method getMethod = ByteBuddyTargetMethodDetector.resolve(beanClass, getter::apply);
+            Method setMethod = ByteBuddyTargetMethodDetector.resolve(beanClass, b -> setter.accept(b, inputValue));
+            return "Reason: Setter - Getter different values!" + "\nset-method: " + setMethod.getName()
+                    + "\nget-method: " + getMethod.getName() + "\n";
+        };
+
+        if (inputValue.getClass().isPrimitive()) {
+            assertEquals(inputValue, outputValue, message);
+        } else {
+            assertSame(inputValue, outputValue, message);
+        }
+    }
 
     public static <B, T> void assertSetterGetter(Class<B> beanClass, BiConsumer<B, T> setter, Function<B, T> getter) {
 
@@ -33,7 +55,7 @@ public class BeanSetterGetterTester {
         Supplier<String> message = () -> {
             Method setMethod = ByteBuddyTargetMethodDetector.resolve(beanClass, b -> setter.accept(b, inputValue));
             return "Reason: Setter - Getter different values!" + "\nset-method: " + setMethod.getName()
-                    + "\nget-method: " + getMethod.getName();
+                    + "\nget-method: " + getMethod.getName() + "\n";
         };
 
         if (getMethodReturnType.isPrimitive()) {

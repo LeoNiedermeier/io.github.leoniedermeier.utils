@@ -37,7 +37,7 @@ public class TransformingMatcher<T, R> extends BaseMatcher<T> {
     @Override
     public void describeMismatch(Object item, Description description) {
         try {
-            // check for type
+            // check for type via ClassCastException
             description.appendText(this.text);
             this.matcherForTransformedValue.describeMismatch(this.transformer.apply((T) item), description);
 
