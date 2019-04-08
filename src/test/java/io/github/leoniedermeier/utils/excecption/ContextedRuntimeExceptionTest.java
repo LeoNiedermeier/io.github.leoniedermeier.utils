@@ -8,8 +8,21 @@ import org.junit.jupiter.api.Test;
 
 class ContextedRuntimeExceptionTest {
 
-    enum MyErrorCodes implements EnumErrorCode {
-        CODE_1, CODE_2, CODE_3;
+    enum MyErrorCodes implements EnumErrorCode, MessagesProvider {
+        CODE_1("Messeg 1"), //
+        CODE_2("Messeg 2"), //
+        CODE_3("Messeg 1");
+
+        private final String message;
+
+        private MyErrorCodes(String message) {
+            this.message = message;
+        }
+
+        @Override
+        public String getMessage() {
+            return this.message;
+        }
     }
 
     static class ThrowsException {
@@ -33,7 +46,8 @@ class ContextedRuntimeExceptionTest {
     void exceptionTesting2() {
         // same as exceptionTesting() but with custom assert method.
         ThrowsException throwsException = new ThrowsException();
-        ContextedRuntimeException exception = assertThrowsContextedRuntimeException(MyErrorCodes.CODE_1, () -> throwsException.doSomething());
+        ContextedRuntimeException exception = assertThrowsContextedRuntimeException(MyErrorCodes.CODE_1,
+                () -> throwsException.doSomething());
         assertExceptionHasErrorCode(MyErrorCodes.CODE_1, exception);
     }
 

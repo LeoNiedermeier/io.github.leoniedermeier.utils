@@ -15,7 +15,7 @@ import io.github.leoniedermeier.utils.excecption.ErrorCode;
 public class RestExceptionHandler {
 
     public static final String HEADER_CID = "X-HEADER_CID";
-    public static final String HEADER_ERROR_CODES = "X-ERROR-CODES";
+    public static final String HEADER_ERROR_CODES = "X-HEADER-ERROR-CODES";
 
     public RestExceptionHandler() {
         super();

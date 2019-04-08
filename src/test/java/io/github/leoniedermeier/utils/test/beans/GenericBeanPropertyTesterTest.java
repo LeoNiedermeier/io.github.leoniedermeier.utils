@@ -16,7 +16,6 @@ class GenericBeanPropertyTesterTest {
     void wrong_property_throws_exception() {
         assertThrows(MultipleFailuresError.class,
                 () -> GenericBeanPropertyTester.testAllSettersGetters(MyErrorBean.class));
-        GenericBeanPropertyTester.testAllSettersGetters(MyErrorBean.class);
     }
     
     @Test

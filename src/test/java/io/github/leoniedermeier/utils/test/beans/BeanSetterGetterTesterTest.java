@@ -20,8 +20,6 @@ public class BeanSetterGetterTesterTest {
         void wrong_property_throws_exception() {
             assertThrows(AssertionFailedError.class, () -> BeanSetterGetterTester.assertSetterGetter(MyErrorBean.class,
                     MyErrorBean::setWrong, MyErrorBean::getWrong));
-            BeanSetterGetterTester.assertSetterGetter(MyErrorBean.class,
-                    MyErrorBean::setWrong, MyErrorBean::getWrong);
         }
     }
 

@@ -2,7 +2,6 @@ package io.github.leoniedermeier.utils.test.exception;
 
 import static org.hamcrest.core.AllOf.allOf;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;

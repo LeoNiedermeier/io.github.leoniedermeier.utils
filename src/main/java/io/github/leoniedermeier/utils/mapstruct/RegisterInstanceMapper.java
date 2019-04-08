@@ -12,5 +12,4 @@ public interface RegisterInstanceMapper<DTO extends Identifiable<?>, MODELL> {
             mappingContext.registerInstance(dto.getId(), modell);
         }
     }
-
 }
