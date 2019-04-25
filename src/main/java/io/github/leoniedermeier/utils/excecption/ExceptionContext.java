@@ -207,15 +207,15 @@ public interface ExceptionContext<T extends ExceptionContext<T>> {
 
         buffer.append("Exception Context:\n");
         int i = 0;
-        for (final Entry pair : contextEntries) {
+        for (final Entry entry : contextEntries) {
             buffer.append("\t[");
             i++;
             buffer.append(i);
             buffer.append(':');
-            buffer.append(pair.getLabel());
+            buffer.append(entry.getLabel());
             buffer.append("=");
             try {
-                buffer.append(pair.getValue());
+                buffer.append(entry.getValue());
             } catch (final Exception e) {
                 buffer.append("Exception thrown on toString(): ");
                 final StringWriter sw = new StringWriter();
