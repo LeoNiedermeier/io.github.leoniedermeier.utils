@@ -11,6 +11,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -81,10 +82,12 @@ public final class GenericBeanPropertyTester {
     }
 
     private static boolean isNotObjectProperty(PropertyDescriptor propertyDescriptor) {
-        return !((propertyDescriptor.getWriteMethod() != null
-                && propertyDescriptor.getWriteMethod().getDeclaringClass() == Object.class)
-                || (propertyDescriptor.getReadMethod() != null
-                        && propertyDescriptor.getReadMethod().getDeclaringClass() == Object.class));
+        return !isMethodDeclaredByObjectClass(propertyDescriptor.getWriteMethod()) && !isMethodDeclaredByObjectClass(propertyDescriptor.getReadMethod());
+    }
+
+    private static boolean isMethodDeclaredByObjectClass(Method method) {
+        return Optional.ofNullable(method).map(Method::getDeclaringClass).filter(Object.class::equals)
+                .isPresent();
     }
 
     private GenericBeanPropertyTester() {

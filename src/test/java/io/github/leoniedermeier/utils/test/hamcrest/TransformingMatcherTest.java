@@ -14,7 +14,7 @@ class TransformingMatcherTest {
 
     @Test
     void wrong_input_type() {
-        TransformingMatcher<String, String> matcher = new TransformingMatcher<>(String::trim, "myText",
+        TransformingMatcher<String, String> matcher = new TransformingMatcher<>(String::trim, "String trim",
                 Matchers.anything());
         assertFalse(matcher.matches(BigInteger.ONE));
         StringDescription description = new StringDescription();
@@ -24,12 +24,12 @@ class TransformingMatcherTest {
 
     @Test
     void matches() {
-        TransformingMatcher<String, String> matcher = new TransformingMatcher<>(String::toUpperCase, "myText",
+        TransformingMatcher<String, String> matcher = new TransformingMatcher<>(String::toUpperCase, "String toUpperCase",
                 Matchers.equalTo("ABCD"));
         assertTrue(matcher.matches("abcd"));
-        assertThat("abcd", new TransformingMatcher<String, Integer>(String::length, "myText", Matchers.greaterThan(2)));
+        assertThat("abcd", new TransformingMatcher<String, Integer>(String::length, "String length", Matchers.greaterThan(2)));
 
-        assertThat("abcd", PropertyAccess.property(String::length, "myText").is(Matchers.greaterThan(2)));
+        assertThat("abcd", PropertyAccess.property(String::length, "String length").is(Matchers.greaterThan(2)));
     }
 
 }

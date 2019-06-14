@@ -1,20 +1,28 @@
 package io.github.leoniedermeier.utils.stream;
 
+import static java.util.Spliterator.IMMUTABLE;
+import static java.util.Spliterator.ORDERED;
+
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.Spliterators.AbstractSpliterator;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class StreamUtils {
 
     /**
-     * Shortcut for {@link Stream#filter(java.util.function.Predicate)} and
+     * Shortcut for {@link Stream#filter(Predicate)} and
      * {@link Stream#flatMap(Function)}.
      *
      * <p>
@@ -49,42 +57,109 @@ public class StreamUtils {
         };
     }
 
-    /** 
+    /**
      * Experimental
      */
     public static <T> Stream<T> flattenedTreeForIterableChildren(T element, Function<T, Iterable<T>> childrenSupplier) {
         return flattenedTreeForStreamChildren(element, childrenSupplier.andThen(StreamUtils::stream));
     }
 
-    /** 
+    /**
      * Experimental
      */
     public static <T> Stream<T> flattenedTreeForIterableChildrenAlternative(T element,
             Function<T, Iterable<T>> childrenSupplier) {
         return flattenedTreeForStreamChildrenAlternative(element, childrenSupplier.andThen(StreamUtils::stream));
     }
-    /** 
+
+    /**
      * Experimental
      */
     public static <T> Stream<T> flattenedTreeForStreamChildren(T element, Function<T, Stream<T>> childrenSupplier) {
         // Depth-first Pre-order (NLR)
         // Attention: each element is wrapped in a Stream of a single element. Can be
-        // preformance critical.
+        // performance critical.
         return Stream.concat(Stream.of(element), Optional.ofNullable(element).map(childrenSupplier)
                 .orElse(Stream.empty()).flatMap(t -> flattenedTreeForStreamChildren(t, childrenSupplier)));
     }
 
-    /** 
+    /**
      * Experimental
      */
     public static <T> Stream<T> flattenedTreeForStreamChildrenAlternative(T element,
             Function<T, Stream<T>> childrenSupplier) {
         // Order is (parent, children of parent, children of child 1, children of child
-        // 1 of child 1, childeren of child 2)
-        // like Depth-first Pre-order (NLR) but insted of element the children of
-        // element are returnde
+        // 1 of child 1, children of child 2)
+        // like Depth-first Pre-order (NLR) but instead of element the children of
+        // element are returned
         return Stream.concat(Stream.of(element),
                 flattenedTreeForStreamChildrenAlternativeRecursion(element, childrenSupplier));
+    }
+
+    /**
+     * 
+     * 
+     * @param <T>          the stream type
+     * @param firstElement
+     * @param hasNext      {@link Predicate} to test if there is a next element.
+     * @param next         {@link UnaryOperator} to access the next element.
+     * @return
+     */
+    public static <T> Stream<T> iterate(final T firstElement, Predicate<T> hasNext, final UnaryOperator<T> next) {
+        Objects.requireNonNull(firstElement);
+        Objects.requireNonNull(hasNext);
+        Objects.requireNonNull(next);
+        final Iterator<T> iterator = new Iterator<T>() {
+            private T current = firstElement;
+
+            @Override
+            public boolean hasNext() {
+                return hasNext.test(current);
+            }
+
+            @Override
+            public T next() {
+                current = next.apply(current);
+                return current;
+            }
+        };
+        // "Problem" is the first element. The first call of iterator::next returns
+        // firstElement::next
+        // Therefore, in order to get the firstElement also in the stream, we have to
+        // add it in the front.
+        return Stream.concat(Stream.of(firstElement), StreamSupport.stream(
+                Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED | Spliterator.IMMUTABLE), false));
+    }
+
+    public static <T> Stream<T> iterate2(final T firstElement, Predicate<T> hasNext, final UnaryOperator<T> next) {
+        Objects.requireNonNull(firstElement);
+        Objects.requireNonNull(hasNext);
+        Objects.requireNonNull(next);
+
+        Spliterator<T> spliterator = new AbstractSpliterator<T>(Long.MAX_VALUE, ORDERED | IMMUTABLE) {
+            private T nextElementToConsume = firstElement;
+
+            @Override
+            public boolean tryAdvance(Consumer<? super T> action) {
+                Objects.requireNonNull(action);
+                // the call order ensures that the first element is consumed and afterwards
+                // the "next" elements.
+                action.accept(nextElementToConsume);
+                // prepare the next element
+                if (hasNext.test(nextElementToConsume)) {
+                    nextElementToConsume = next.apply(nextElementToConsume);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public Spliterator<T> trySplit() {
+                return null;
+            }
+        };
+
+        return StreamSupport.stream(spliterator, false);
     }
 
     /**
@@ -140,7 +215,8 @@ public class StreamUtils {
      * @return The stream built from the given {@link Iterator}
      */
     public static <T> Stream<T> stream(Iterator<T> iterator) {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
+        return StreamSupport.stream(
+                Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED | Spliterator.IMMUTABLE), false);
     }
 
     private static <T> Stream<T> flattenedTreeForStreamChildrenAlternativeRecursion(T element,

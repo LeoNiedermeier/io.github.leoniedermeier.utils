@@ -14,23 +14,24 @@ import org.hamcrest.Matcher;
  * @param <R> The type of the transformed value.
  */
 public class TransformingMatcher<T, R> extends BaseMatcher<T> {
-    private Matcher<? super R> matcherForTransformedValue;
-    private String text;
-    private Function<T, R> transformer;
+    private final String description;
+    private final Matcher<? super R> matcherForTransformedValue;
+    private final Function<T, R> transformer;
 
     /**
      * 
      * @param transformer                The {@link Function} to transform the
      *                                   initial value.
-     * @param text                       The description to use as text for
-     *                                   expectation and mismatch.
+     * @param description                The description for expectation and
+     *                                   mismatch.
      * @param matcherForTransformedValue The {@link Matcher} to apply to the
      *                                   transformed value.
      */
-    public TransformingMatcher(Function<T, R> transformer, String text, Matcher<? super R> matcherForTransformedValue) {
+    public TransformingMatcher(Function<T, R> transformer, String description,
+            Matcher<? super R> matcherForTransformedValue) {
         super();
         this.transformer = transformer;
-        this.text = text;
+        this.description = description; 
         this.matcherForTransformedValue = matcherForTransformedValue;
     }
 
@@ -38,18 +39,18 @@ public class TransformingMatcher<T, R> extends BaseMatcher<T> {
     public void describeMismatch(Object item, Description description) {
         try {
             // check for type via ClassCastException
-            description.appendText(this.text);
+            description.appendText(this.description);
             this.matcherForTransformedValue.describeMismatch(this.transformer.apply((T) item), description);
 
         } catch (ClassCastException e) {
-            description.appendText("wrong type: ").appendText(item.getClass().getName()).appendText(" (").appendValue(item)
-                    .appendText(")");
+            description.appendText("wrong type: ").appendText(item.getClass().getName()).appendText(" (")
+                    .appendValue(item).appendText(")");
         }
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText(this.text);
+        description.appendText(this.description);
         this.matcherForTransformedValue.describeTo(description);
     }
 

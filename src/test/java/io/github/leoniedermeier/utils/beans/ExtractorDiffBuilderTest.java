@@ -35,5 +35,4 @@ class ExtractorDiffBuilderTest {
         assertThat(lhs.name, equalTo(diff.getLeft()));
         assertThat(rhs.name, equalTo(diff.getRight()));
     }
-
 }

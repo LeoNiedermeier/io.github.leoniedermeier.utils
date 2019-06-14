@@ -34,9 +34,9 @@ public final class ExceptionMatchers {
             return null;
         }
 
-        private Matcher<Exception> exceptionOfType;
+        private final Matcher<Exception> exceptionOfType;
 
-        private Class<T> expected;
+        private final Class<T> expected;
 
         public ExecutableThrowsMatcher(Class<T> expected, Matcher<Exception> exceptionOfType) {
             super();
@@ -85,7 +85,7 @@ public final class ExceptionMatchers {
         return new ExecutableThrowsMatcher<>(expected, isExceptionOfType(expected)).with(matcher);
     }
 
-    private static <T extends Exception, R> Matcher<T> isExceptionOfType(Class<R> expected) {
+    private static <T extends Exception, R > Matcher<T> isExceptionOfType(Class<R> expected) {
         return new CustomMatcher<T>(" exception of type " + expected) {
 
             private String mismatch;

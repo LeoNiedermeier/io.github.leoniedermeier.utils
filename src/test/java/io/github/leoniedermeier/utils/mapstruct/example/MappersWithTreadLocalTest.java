@@ -16,7 +16,7 @@ import io.github.leoniedermeier.utils.mapstruct.example.Modell.University;
 public class MappersWithTreadLocalTest {
 
     @Test
-    void rundtrip() throws Exception {
+    void roundtrip() throws Exception {
         Student student = new Student();
         student.setId("myName");
 
