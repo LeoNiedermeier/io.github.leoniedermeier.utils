@@ -95,6 +95,7 @@ class ExceptionContextTest {
             }
             Entry entry = new Entry("label", new MyValue("someText"));
             Entry result = SerializationUtils.roundtrip(entry);
+            System.out.println(result.getValue());
             assertEquals(entry.getLabel(), result.getLabel());
             assertTrue(result.getLabel() instanceof String);
             assertTrue(((String) result.getValue()).contains("someText"));

@@ -1,5 +1,6 @@
 package io.github.leoniedermeier.utils.test.beans;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -10,7 +11,7 @@ import org.opentest4j.IncompleteExecutionException;
 
 final class BeanTesterUtils {
 
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM =  new SecureRandom();
 
     private static Map<Class<?>, Supplier<Object>> SUPPLIERS = new HashMap<>();
 

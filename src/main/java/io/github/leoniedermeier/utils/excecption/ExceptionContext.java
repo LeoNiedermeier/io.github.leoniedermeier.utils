@@ -18,7 +18,6 @@ package io.github.leoniedermeier.utils.excecption;
 
 import static java.util.stream.Collectors.toSet;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -44,8 +43,11 @@ public interface ExceptionContext<T extends ExceptionContext<T>> {
         @SuppressWarnings("squid:S4926")
         private static final long serialVersionUID = -3878722290376314455L;
 
-        private transient String label;
-        private transient Object value;
+        private String label;
+        
+        // special handling in writeReplace method
+        @SuppressWarnings("squid:S1948")
+        private Object value;
 
         public Entry(String label, Object value) {
             super();
@@ -61,22 +63,14 @@ public interface ExceptionContext<T extends ExceptionContext<T>> {
             return value;
         }
 
-        private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException {
-            s.defaultReadObject();
-            label = (String) s.readObject();
-            value = s.readObject();
-        }
-
-        private void writeObject(java.io.ObjectOutputStream s) throws IOException {
-            s.defaultWriteObject();
-            s.writeObject(label);
+        private Object writeReplace() {
             if (value instanceof Serializable) {
-                s.writeObject(value);
+                return this;
             } else {
                 try {
-                    s.writeObject(">> Stringified Value Object: <<::" + value);
+                    return new Entry(label, ">> Stringified Value Object: <<::" + value);
                 } catch (Exception e) {
-                    s.writeObject(">> Value Object not serializeable <<");
+                    return new Entry(label, ">> Value Object not serializeable <<");
                 }
             }
         }
