@@ -12,6 +12,10 @@ public interface ErrorCode {
      */
     String code();
 
+    default String description() {
+        return null;
+    }
+    
     default boolean equalsTo(ErrorCode other) {
         return other != null && Objects.equals(code(), other.code());
     }

@@ -96,11 +96,14 @@ public interface ExtendedExceptionContext<T extends ExtendedExceptionContext<T>>
     @Override
     default String getFormattedExceptionMessage() {
         final StringBuilder buffer = new StringBuilder(256);
-        buffer.append("ErrorCodes=").append(getErrorCodes().map(ErrorCode::code).collect(Collectors.joining(", ")))
+        buffer.append("ErrorCodes: ").append(getErrorCodes().map(ErrorCode::code).collect(Collectors.joining(", ")))
                 .append("\n");
 
-        buffer.append("CID=");
+        buffer.append("CID: ");
         getCID().ifPresent(buffer::append);
+        buffer.append("\n---------------------------------\n");
+        buffer.append("Descriptions:\n");
+        getErrorCodes().filter(e -> e.description() != null).forEach(e -> buffer.append("  ").append(e.code()).append(": ").append(e.description()).append('\n'));
         buffer.append("\n---------------------------------\n");
         buffer.append(ExceptionContext.super.getFormattedExceptionMessage());
         return buffer.toString();

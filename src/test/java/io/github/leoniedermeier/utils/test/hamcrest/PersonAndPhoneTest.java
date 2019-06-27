@@ -3,6 +3,7 @@ package io.github.leoniedermeier.utils.test.hamcrest;
 import static io.github.leoniedermeier.utils.test.hamcrest.PropertyAccess.property;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.hamcrest.Matcher;
@@ -26,6 +27,6 @@ class PersonAndPhoneTest {
      */
     static Matcher<Person> allPhoneNumbersStartWith(String string) {
         return property(Person::getPhones, " person phones ")
-                .is(everyItem(property(Phone::getNumber, " number ").is(Matchers.startsWith(string))));
+                .is(everyItem(property(Phone::getNumber, " number ").is(startsWith(string))));
     }
 }

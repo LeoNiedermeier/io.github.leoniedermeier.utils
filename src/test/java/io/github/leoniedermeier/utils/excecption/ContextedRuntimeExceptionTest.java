@@ -1,6 +1,7 @@
 package io.github.leoniedermeier.utils.excecption;
 
-import static io.github.leoniedermeier.utils.test.exception.ContextedRuntimeExceptionAssertions.*;
+import static io.github.leoniedermeier.utils.test.exception.ContextedRuntimeExceptionAssertions.assertExceptionHasErrorCode;
+import static io.github.leoniedermeier.utils.test.exception.ContextedRuntimeExceptionAssertions.assertThrowsContextedRuntimeException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -8,21 +9,14 @@ import org.junit.jupiter.api.Test;
 
 class ContextedRuntimeExceptionTest {
 
-    enum MyErrorCodes implements EnumErrorCode, MessagesProvider {
-        CODE_1("Messeg 1"), //
-        CODE_2("Messeg 2"), //
-        CODE_3("Messeg 1");
+    enum MyErrorCodes implements EnumErrorCode  {
 
-        private final String message;
+        @Description("Description CODE 1")
+        CODE_1(), //
+        CODE_2(), //
 
-        private MyErrorCodes(String message) {
-            this.message = message;
-        }
-
-        @Override
-        public String getMessage() {
-            return this.message;
-        }
+        @Description("Description CODE 3")
+        CODE_3();
     }
 
     static class ThrowsException {
@@ -49,6 +43,7 @@ class ContextedRuntimeExceptionTest {
         ContextedRuntimeException exception = assertThrowsContextedRuntimeException(MyErrorCodes.CODE_1,
                 () -> throwsException.doSomething());
         assertExceptionHasErrorCode(MyErrorCodes.CODE_1, exception);
+        exception.printStackTrace();
     }
 
 }

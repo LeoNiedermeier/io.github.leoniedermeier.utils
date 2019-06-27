@@ -200,14 +200,10 @@ public interface ExceptionContext<T extends ExceptionContext<T>> {
         final StringBuilder buffer = new StringBuilder(256);
 
         buffer.append("Exception Context:\n");
-        int i = 0;
         for (final Entry entry : contextEntries) {
-            buffer.append("\t[");
-            i++;
-            buffer.append(i);
-            buffer.append(':');
+            buffer.append("  ");
             buffer.append(entry.getLabel());
-            buffer.append("=");
+            buffer.append(": ");
             try {
                 buffer.append(entry.getValue());
             } catch (final Exception e) {
@@ -216,7 +212,7 @@ public interface ExceptionContext<T extends ExceptionContext<T>> {
                 e.printStackTrace(new PrintWriter(sw, true));
                 buffer.append(sw.getBuffer());
             }
-            buffer.append("]\n");
+            buffer.append('\n');
         }
         buffer.append("---------------------------------");
 
