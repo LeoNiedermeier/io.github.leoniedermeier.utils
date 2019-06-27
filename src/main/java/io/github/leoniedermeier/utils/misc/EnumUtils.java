@@ -2,7 +2,7 @@ package io.github.leoniedermeier.utils.misc;
 
 import java.lang.annotation.Annotation;
 
-public class EnumUtils {
+public final class EnumUtils {
 
     /**
      * Returns the enum constant's annotation for the specified type if such an

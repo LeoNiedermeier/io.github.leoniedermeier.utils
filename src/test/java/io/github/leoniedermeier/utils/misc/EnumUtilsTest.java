@@ -12,8 +12,14 @@ import java.lang.annotation.Target;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import io.github.leoniedermeier.utils.test.junit.jupiter.UtilClassConventionsTester;
+
 class EnumUtilsTest {
 
+    @Nested
+    class EnumUtilsUtilClassConventionsTest implements UtilClassConventionsTester<EnumUtils> {
+    }
+    
     @Nested
     static class GetAnnotation {
         @Retention(RetentionPolicy.RUNTIME)
