@@ -26,14 +26,14 @@ public class JacksonSubtypesUtils {
     public static List<Class<?>> findJsonTypesWithSpring(String basePackage) {
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(new AnnotationTypeFilter(JsonTypeName.class));
-        return provider.findCandidateComponents(basePackage).stream().map(JacksonSubtypesUtils::classForName).collect(toList());
+        return provider.findCandidateComponents(basePackage).stream().map(BeanDefinition::getBeanClassName).map(JacksonSubtypesUtils::classForName).collect(toList());
     }
 
-    private static Class<?> classForName(BeanDefinition beanDefinition) {
+    private static Class<?> classForName(String className) {
         try {
-            return Class.forName(beanDefinition.getBeanClassName());
+            return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Class not found " + beanDefinition.getBeanClassName(), e);
+            throw new IllegalStateException("Class not found " + className, e);
         }
     }
 
