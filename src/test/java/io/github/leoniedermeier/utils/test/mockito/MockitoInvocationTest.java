@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -24,6 +25,7 @@ class MockitoInvocationTest {
         }
     }
 
+    // Answer1
     interface When<T, R> {
         interface With<T, R> {
             interface Then<T, R> {
@@ -36,7 +38,7 @@ class MockitoInvocationTest {
         static <T, R> With<T, R> when(Function<T, R> function) {
             return (T t) -> {
                 return (Function<T, R> mockFunction) -> Mockito.when(function.apply(t))
-                        .thenAnswer(invocation -> mockFunction.apply(invocation.getArgument(0)));
+                        .then(invocation -> mockFunction.apply(invocation.getArgument(0)));
             };
         }
 
@@ -56,7 +58,7 @@ class MockitoInvocationTest {
 
     @Test
     void mockWithAnswer(@Mock MyService mock) {
-        Mockito.when(mock.someMethod(ArgumentMatchers.anyString())).thenAnswer(new Answer<String>() {
+        Mockito.when(mock.someMethod(ArgumentMatchers.anyString())).then(new Answer<String>() {
             @Override
             public String answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
@@ -67,8 +69,20 @@ class MockitoInvocationTest {
     }
 
     @Test
+    void mockWithAdditionalAnswers(@Mock MyService mock) {
+        Mockito.when(mock.someMethod(ArgumentMatchers.anyString())).then(AdditionalAnswers.answer(s -> "Mock:" + s));
+        assertEquals("Mock:foo", mock.someMethod("foo"));
+    }
+
+    @Test
+    void mockWithAdditionalAnswersMethodReference(@Mock MyService mock) {
+        Mockito.when(mock.someMethod(ArgumentMatchers.anyString())).then(AdditionalAnswers.answer("Mock:"::concat));
+        assertEquals("Mock:foo", mock.someMethod("foo"));
+    }
+    
+    @Test
     void mockWithLambdaAnswer(@Mock MyService mock) {
-        Mockito.when(mock.someMethod("foo")).thenAnswer(invocation -> {
+        Mockito.when(mock.someMethod("foo")).then(invocation -> {
             Object[] args = invocation.getArguments();
             return "Mock:" + args[0];
         });
@@ -77,7 +91,7 @@ class MockitoInvocationTest {
 
     @Test
     void mockWithMethodReferenceAnswer(@Mock MyService mock) {
-        Mockito.when(mock.someMethod("foo")).thenAnswer(this::extracted);
+        Mockito.when(mock.someMethod("foo")).then(this::extracted);
         assertEquals("Mock:foo", mock.someMethod("foo"));
     }
 
