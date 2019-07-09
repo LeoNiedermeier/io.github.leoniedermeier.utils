@@ -20,7 +20,7 @@ class JacksonSubtypesUtilsTest {
     void withClassgraph() throws Exception {
 
         ObjectMapper mapper = new ObjectMapper();
-        List<Class<?>> types = JacksonSubtypesUtils.findJsonTypesWithClassGraph("io.github.leoniedermeier.utils");
+        List<Class<?>> types = JacksonSubtypesUtils.findJsonTypesWithClassGraph(Wrapper.class.getPackage().getName());
         mapper.registerSubtypes(types);
 
         Wrapper wrapper = createData();
@@ -35,7 +35,7 @@ class JacksonSubtypesUtilsTest {
     void withSpring() throws Exception {
 
         ObjectMapper mapper = new ObjectMapper();
-        List<Class<?>> types = JacksonSubtypesUtils.findJsonTypesWithSpring("io.github.leoniedermeier.utils");
+        List<Class<?>> types = JacksonSubtypesUtils.findJsonTypesWithSpring(Wrapper.class.getPackage().getName());
         mapper.registerSubtypes(types);
 
         Wrapper wrapper = createData();
