@@ -41,7 +41,7 @@ class MockitoAnswerTest {
 
     @Test
     void mockWithAdditionalAnswersMethodReference(@Mock MyService mock) {
-        Mockito.when(mock.someMethod(ArgumentMatchers.anyString())).then(AdditionalAnswers.answer("Mock:"::concat));
+        Mockito.when(mock.someMethod(ArgumentMatchers.anyString())).then(AdditionalAnswers.answer(this::answerMethodWithString));
         assertEquals("Mock:foo", mock.someMethod("foo"));
     }
 
@@ -56,12 +56,16 @@ class MockitoAnswerTest {
 
     @Test
     void mockWithMethodReferenceAnswer(@Mock MyService mock) {
-        Mockito.when(mock.someMethod("foo")).then(this::extracted);
+        Mockito.when(mock.someMethod("foo")).then(this::answerMethodWithInvocationMock);
         assertEquals("Mock:foo", mock.someMethod("foo"));
     }
 
-    private String extracted(InvocationOnMock invocation) {
+    private String answerMethodWithInvocationMock(InvocationOnMock invocation) {
         Object[] args = invocation.getArguments();
         return "Mock:" + args[0];
+    }
+    
+    private String answerMethodWithString(String string) {
+        return "Mock:" + string;
     }
 }
