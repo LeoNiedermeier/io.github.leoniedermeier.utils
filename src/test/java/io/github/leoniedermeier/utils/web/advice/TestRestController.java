@@ -33,6 +33,11 @@ class TestRestController {
         ERROR_CODE_SIMPLE,
 
         @HttpResponseStatus(HttpStatus.NOT_FOUND)
-        ERROR_CODE_WITH_HTTP_NOT_FOUND;
+        ERROR_CODE_WITH_HTTP_NOT_FOUND {
+            @Override
+            public String toString() {
+                return super.toString();
+            }
+        };
     }
 }

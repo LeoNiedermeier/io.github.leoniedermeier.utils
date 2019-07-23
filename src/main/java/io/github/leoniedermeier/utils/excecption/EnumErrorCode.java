@@ -11,7 +11,7 @@ public interface EnumErrorCode extends ErrorCode {
     
     @Override
     public default String description() {
-        if(! this.getClass().isEnum()) {
+        if(! (this instanceof Enum<?>)) {
             return null;
         }
         try {
