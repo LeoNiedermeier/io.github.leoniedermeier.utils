@@ -43,7 +43,7 @@ public final class SpringAopProxyTargetMethodDetector {
                 p -> method.accept(p, null));
     }
 
-    public static <T> Method resolve(Class<T> type, Consumer<? super T> method) {
+    static <T> Method resolve(Class<T> type, Consumer<? super T> method) {
 
         AdvisedSupport config = new AdvisedSupport();
         config.setTargetClass(type);

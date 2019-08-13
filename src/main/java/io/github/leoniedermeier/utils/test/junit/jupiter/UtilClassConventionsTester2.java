@@ -5,23 +5,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.Map;
 
+import org.apache.commons.lang3.reflect.TypeUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("Conventions of Utils class")
 @SuppressWarnings("squid:S2326")
 // THE UTIL_CLASS type parameter is accessed by reflection
-public interface UtilClassConventionsTester<UTIL_CLASS> {
+public interface UtilClassConventionsTester2<UTIL_CLASS> {
     
     default Class<?> getClassUnderTest() {
-        Class<?> clazz = getClass();
-        // direct subtyp with no other interfaces
-        ParameterizedType parameterizedType = (ParameterizedType) clazz.getGenericInterfaces()[0];
-        Type[] typeArguments = parameterizedType.getActualTypeArguments();
-        return (Class<?>) typeArguments[0];
+        Map<TypeVariable<?>, Type> typeArguments = TypeUtils.getTypeArguments(getClass(), UtilClassConventionsTester2.class);
+        return (Class<?>) typeArguments.get(UtilClassConventionsTester2.class.getTypeParameters()[0]);
     }
 
     @Test
