@@ -67,10 +67,4 @@ class VollendetesLebensjahrUtilsTest {
             assertEquals(expected, result);
         }
     }
-
-    @Test
-    void tst() {
-        System.out.println(Period.between(LocalDate.of(2004, 02, 29), LocalDate.of(2009, 02, 28)).getYears());
-
-    }
 }
