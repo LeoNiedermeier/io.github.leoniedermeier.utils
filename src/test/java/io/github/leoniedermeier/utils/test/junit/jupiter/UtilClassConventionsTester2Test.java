@@ -10,7 +10,7 @@ class UtilClassConventionsTester2Test {
 
     public static final class MyUtils {
         private MyUtils() {
-
+            throw new AssertionError("No MyUtils instances for you!");
         }
     }
 
