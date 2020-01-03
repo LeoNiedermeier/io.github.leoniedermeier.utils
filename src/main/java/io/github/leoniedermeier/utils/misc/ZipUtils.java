@@ -5,11 +5,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 
 public class ZipUtils {
 
@@ -34,15 +39,37 @@ public class ZipUtils {
         }
     }
 
-    public OutputStream wrap(String entryName, OutputStream outputStream) throws IOException {
+    public static OutputStream wrap(String entryName, OutputStream outputStream) throws IOException {
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
         zipOutputStream.putNextEntry(new ZipEntry(entryName));
         return zipOutputStream;
     }
     
-    public InputStream unwrap(  InputStream inputStream) throws IOException {
+    public static InputStream unwrap(  InputStream inputStream) throws IOException {
         ZipInputStream zipInputStream = new ZipInputStream(inputStream);
         zipInputStream.getNextEntry();
         return zipInputStream;
+    }
+    
+    
+    
+    public static Path extractResourceZipToTempDir(final Resource resource) throws IOException {
+        // could be resource.getFilename() in some cases.
+        final Path tempDir = Files.createTempDirectory("zip");
+        // Explicitly register for delete after application terminates (not done by Files.createTempDirectory(...))
+        tempDir.toFile().deleteOnExit();
+        try (ZipInputStream zis = new ZipInputStream(resource.getInputStream())) {
+            for (ZipEntry ze = zis.getNextEntry(); ze != null; ze = zis.getNextEntry()) {
+                final Path entryPath = tempDir.resolve(ze.getName());
+                entryPath.toFile().deleteOnExit();
+                if (ze.isDirectory()) {
+                    Files.createDirectories(entryPath);
+                } else {
+                    Files.copy(zis, entryPath);
+                }
+            }
+            zis.closeEntry();
+        }
+        return tempDir;
     }
 }
