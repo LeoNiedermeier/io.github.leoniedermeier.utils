@@ -7,12 +7,12 @@ import org.apache.commons.lang3.builder.DiffBuilder;
 import org.apache.commons.lang3.builder.DiffResult;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ExtractorDiffBuilder<T, L extends T, R extends T> implements Builder<DiffResult> {
+public class ExtractorDiffBuilder<T, L extends T, R extends T> implements Builder<DiffResult<T>> {
 
     public static <T, L extends T, R extends T> ExtractorDiffBuilder<T, L, R> of(L lhs, R rhs, ToStringStyle style) {
         return new ExtractorDiffBuilder<>(lhs, rhs, style);
     }
-    private final DiffBuilder diffBuilder;
+    private final DiffBuilder<T> diffBuilder;
     private final L lhs;
 
     private final R rhs;
@@ -21,7 +21,7 @@ public class ExtractorDiffBuilder<T, L extends T, R extends T> implements Builde
         super();
         this.lhs = lhs;
         this.rhs = rhs;
-        this.diffBuilder = new DiffBuilder(lhs, rhs, style);
+        this.diffBuilder = new DiffBuilder<T>(lhs, rhs, style);
     }
 
     public ExtractorDiffBuilder<T, L, R> append(String fieldName, Function<T, Object> valueExtractor) {
@@ -30,7 +30,7 @@ public class ExtractorDiffBuilder<T, L extends T, R extends T> implements Builde
     }
 
     @Override
-    public DiffResult build() {
+    public DiffResult<T> build() {
         return this.diffBuilder.build();
     }
 }

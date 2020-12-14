@@ -24,11 +24,12 @@ class ExtractorDiffBuilderTest {
         }
     }
 
+   
     @Test
     void test() {
         TestClass lhs = new TestClass("Hans");
         TestClass rhs = new TestClass("Sepp");
-        DiffResult diffResult = new ExtractorDiffBuilder<>(lhs, rhs, ToStringStyle.JSON_STYLE)
+        DiffResult<TestClass> diffResult = new ExtractorDiffBuilder<>(lhs, rhs, ToStringStyle.JSON_STYLE)
                 .append("id", TestClass::getName).build();
         assertThat(diffResult.getDiffs(), iterableWithSize(1));
         Diff<?> diff = diffResult.getDiffs().get(0);

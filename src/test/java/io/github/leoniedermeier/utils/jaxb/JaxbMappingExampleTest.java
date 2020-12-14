@@ -20,7 +20,7 @@ import io.github.leoniedermeier.utils.jaxb.Model.Wrapper;
 class JaxbMappingExampleTest {
 
     @Test
-    void reoundtrip() throws Exception {
+    void roundtrip() throws Exception {
         JAXBContext jaxbContext = JAXBContext.newInstance(Wrapper.class, Vehicle.class, Bicycle.class, Car.class);
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
