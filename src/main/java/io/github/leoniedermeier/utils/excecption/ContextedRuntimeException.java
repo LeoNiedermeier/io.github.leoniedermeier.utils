@@ -142,4 +142,18 @@ public class ContextedRuntimeException extends RuntimeException
         addContextValue(ErrorCode.class.getSimpleName(), errorCode);
         addCID();
     }
+    
+    /**
+     * Casts the given {@link Throwable} to a {@link ContextedRuntimeException} if the given {@link Throwable}
+     * is an instance of {@link ContextedRuntimeException}, otherwise casts the given {@link Throwable} to a {@link ContextedRuntimeException}:
+     * @param errorCode The {@link ErrorCode} to use.
+     * @param throwable The {@link Throwable} to check.
+     * @return A {@link ContextedRuntimeException}.
+     */
+    public static ContextedRuntimeException castOrCreate(ErrorCode errorCode, Throwable throwable){
+        if(throwable instanceof  ContextedRuntimeException){
+            return ((ContextedRuntimeException)throwable).addErrorCode(errorCode);
+        }
+        return new ContextedRuntimeException(errorCode, throwable);
+    }
 }

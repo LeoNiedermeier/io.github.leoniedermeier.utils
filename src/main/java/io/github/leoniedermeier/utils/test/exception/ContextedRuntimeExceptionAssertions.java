@@ -21,11 +21,22 @@ public final class ContextedRuntimeExceptionAssertions {
      * @param exception         The {@link ContextedRuntimeException} to test.
      */
     public static void assertExceptionHasErrorCode(ErrorCode expectedErrorCode, ContextedRuntimeException exception) {
-        boolean noneMatch = exception.getErrorCodes().noneMatch(expectedErrorCode::equalsTo);
+       assertExceptionHasErrorCode(expectedErrorCode.code(), exception);
+    }
+    
+    /**
+     * Custom assert method checking whether the given
+     * {@link ContextedRuntimeException} has the given error code.
+     * 
+     * @param expectedErrorCode The expected error code.
+     * @param exception         The {@link ContextedRuntimeException} to test.
+     */
+    public static void assertExceptionHasErrorCode(String expectedErrorCode, ContextedRuntimeException exception) {
+        boolean noneMatch = exception.getErrorCodes().map(ErrorCode::code).noneMatch(expectedErrorCode::equals);
         if (noneMatch) {
             List<String> codes = exception.getErrorCodes().map(ErrorCode::code).collect(toList());
-            throw new AssertionFailedError("Exception does not contain errorcode " + expectedErrorCode.code()
-                    + "\navailable error codes: " + codes, expectedErrorCode.code(), codes);
+            throw new AssertionFailedError("Exception does not contain errorcode " + expectedErrorCode
+                    + "\navailable error codes: " + codes, expectedErrorCode, codes);
         }
     }
 
@@ -39,6 +50,22 @@ public final class ContextedRuntimeExceptionAssertions {
      * @see org.junit.jupiter.api.Assertions#assertThrows
      */
     public static ContextedRuntimeException assertThrowsContextedRuntimeException(ErrorCode expectedErrorCode,
+            Executable executable) {
+        ContextedRuntimeException exception = assertThrows(ContextedRuntimeException.class, executable);
+        assertExceptionHasErrorCode(expectedErrorCode, exception);
+        return exception;
+    }
+    
+    /**
+     * Custom assert method checking for {@link ContextedRuntimeException} and
+     * error code.
+     * 
+     * @param expectedErrorCode The expected error code.
+     * @param executable        The {@link Executable}.
+     * @return The thrown {@link ContextedRuntimeException}.
+     * @see org.junit.jupiter.api.Assertions#assertThrows
+     */
+    public static ContextedRuntimeException assertThrowsContextedRuntimeException(String expectedErrorCode,
             Executable executable) {
         ContextedRuntimeException exception = assertThrows(ContextedRuntimeException.class, executable);
         assertExceptionHasErrorCode(expectedErrorCode, exception);
